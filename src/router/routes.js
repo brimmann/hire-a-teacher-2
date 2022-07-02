@@ -14,10 +14,11 @@ const routes = [
   },
   {
     path: '/teacher',
+    redirect: '/teacher/search',
     component: () => import('layouts/TeacherPanel.vue'),
     children: [
-      { path: 'search', component: () => import('pages/JobSearch') },
-      { path: 'resume', component: () => import('pages/ResumePage') },
+      { path: 'search', component: () => import('pages/JobSearch'), name: 'search' },
+      { path: 'resume', component: () => import('pages/ResumePage'), name: 'resume' },
       { path: 'applications', component: () => import('pages/JobApplications') },
       { path: 'offers', component: () => import('pages/JobOffers') },
     ],

@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh lpR lFf">
+  <q-layout view="lHh LpR lFf">
     <q-header class="bg-primary text-white">
       <q-toolbar>
         <q-btn
@@ -10,6 +10,7 @@
           @click="toggleLeftDrawer"
           v-if="$q.platform.is.mobile || !leftDrawerOpen"
         />
+
         <q-input
           outlined
           square
@@ -18,11 +19,17 @@
           class="bg-white absolute-center"
           style="width: 60%; min-width: 200px"
           placeholder="Search i.e math, Lahore"
+          v-if="$route.name === 'search'"
         >
           <template v-slot:append>
             <q-btn flat round color="primary" icon="search" />
           </template>
         </q-input>
+        <q-space/>
+        <q-separator dark vertical v-if="$route.name === 'resume'"/>
+        <q-btn stretch flat label="Print" icon="print" no-caps v-if="$route.name === 'resume'"/>
+        <q-separator dark vertical v-if="$route.name === 'resume'"/>
+        <q-btn stretch flat label="Download PDF" icon="download" no-caps v-if="$route.name === 'resume'"/>
       </q-toolbar>
     </q-header>
 
@@ -67,7 +74,7 @@
 
             <q-item-section> Job Offers </q-item-section>
           </q-item>
-          <q-item clickable v-ripple to="/teacher/offers" exact>
+          <q-item clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="logout" />
             </q-item-section>
