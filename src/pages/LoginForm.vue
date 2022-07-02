@@ -57,6 +57,7 @@
               style="width: 100%"
               @click="login"
               :loading="loggingIn"
+
             >
               <template v-slot:loading>
                 <q-spinner-bars class="on-left" />
@@ -97,6 +98,7 @@ export default {
         type: this.loginMode,
       });
       this.loggingIn = false;
+      this.$router.push("/teacher");
     },
   },
 };

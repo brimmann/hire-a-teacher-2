@@ -1,27 +1,33 @@
 const routes = [
   {
-    path: "/",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [{ path: "", component: () => import("pages/IndexPage.vue") }],
+    path: '/',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
   },
   {
-    path: "/auth",
-    component: () => import("layouts/AuthLayout.vue"),
+    path: '/auth',
+    component: () => import('layouts/AuthLayout.vue'),
     children: [
-      { path: "login", component: () => import("pages/LoginForm") },
-      { path: "register", component: () => import("pages/RegisterPage") },
+      { path: 'login', component: () => import('pages/LoginForm') },
+      { path: 'register', component: () => import('pages/RegisterPage') },
     ],
   },
   {
-    path: "/teacher",
-    component: () => import("layouts/TeacherPanel.vue"),
+    path: '/teacher',
+    component: () => import('layouts/TeacherPanel.vue'),
+    children: [
+      { path: 'search', component: () => import('pages/JobSearch') },
+      { path: 'resume', component: () => import('pages/ResumePage') },
+      { path: 'applications', component: () => import('pages/JobApplications') },
+      { path: 'offers', component: () => import('pages/JobOffers') },
+    ],
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: "/:catchAll(.*)*",
-    component: () => import("pages/ErrorNotFound.vue"),
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/ErrorNotFound.vue'),
   },
 ];
 
