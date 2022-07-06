@@ -75,7 +75,7 @@
                   style="width: 100%"
                   :loading="registering"
                 >
-                  <template v-slot:loading>
+                  <template #loading>
                     <q-spinner-bars class="on-left" />
                     Registering...
                   </template>
@@ -157,7 +157,7 @@
                   type="submit"
                   :loading="registering"
                 >
-                  <template v-slot:loading>
+                  <template #loading>
                     <q-spinner-bars class="on-left" />
                     Registering...
                   </template>

@@ -21,15 +21,37 @@
           placeholder="Search i.e math, Lahore"
           v-if="$route.name === 'search'"
         >
-          <template v-slot:append>
+          <template #append>
             <q-btn flat round color="primary" icon="search" />
           </template>
         </q-input>
         <q-space/>
-        <q-separator dark vertical v-if="$route.name === 'resume'"/>
-        <q-btn stretch flat label="Print" icon="print" no-caps v-if="$route.name === 'resume'"/>
-        <q-separator dark vertical v-if="$route.name === 'resume'"/>
-        <q-btn stretch flat label="Download PDF" icon="download" no-caps v-if="$route.name === 'resume'"/>
+        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675"/>
+        <q-btn stretch flat label="Print" icon="print" no-caps v-if="$route.name === 'resume' && $q.screen.width > 675"/>
+        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675"/>
+        <q-btn stretch flat label="Download PDF" icon="download" no-caps v-if="$route.name === 'resume' && $q.screen.width > 675"/>
+        <q-btn-dropdown
+          flat
+          padding="0"
+          no-caps
+          dropdown-icon="more_vert"
+          @click="onMainClick"
+          :menu-offset="[11, 13]"
+          unelevated
+          content-style="border-radius: 0px;"
+          auto-close
+          v-if="$q.screen.width < 675"
+        >
+          <q-list separator>
+
+            <q-item clickable v-close-popup @click="onItemClick">
+              <q-btn stretch flat label="Download PDF" icon="download" no-caps/>
+            </q-item>
+            <q-item clickable v-close-popup @click="onItemClick">
+              <q-btn stretch flat label="Print" icon="print" no-caps/>
+            </q-item>
+          </q-list>
+        </q-btn-dropdown>
       </q-toolbar>
     </q-header>
 

@@ -59,7 +59,7 @@
               :loading="loggingIn"
 
             >
-              <template v-slot:loading>
+              <template #loading>
                 <q-spinner-bars class="on-left" />
                 Logging in...
               </template>
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapStores } from "pinia/dist/pinia.esm-browser";
+import { mapStores } from "pinia";
 import { useUserStore } from "stores/user";
 
 export default {
