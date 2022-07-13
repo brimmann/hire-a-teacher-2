@@ -3,9 +3,17 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
+import { mapStores } from 'pinia';
+import { useUserStore } from 'stores/user';
 
 export default defineComponent({
-  name: 'App'
-})
+  name: 'App',
+  computed: {
+    ...mapStores(useUserStore),
+  },
+  beforeMount() {
+    this.userStore.loadUser();
+  },
+});
 </script>

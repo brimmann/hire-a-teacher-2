@@ -1,239 +1,354 @@
 import { defineStore } from 'pinia';
+import { useUserStore } from 'stores/user';
+import axios from 'axios';
 
 export const useResumeStore = defineStore('resume', {
   state: () => ({
+    noResume: true,
+    resumeLoading: false,
     adding: {
+      resume: false,
       newExp: false,
       newEdu: false,
       newSkill: false,
       newLang: false,
     },
-    intro: {
-      editing: false,
-      fullName: 'Mohammad Ali',
-      headline: 'Math Teacher',
-      phoneNumber: '(123) 456 78 99',
-      emailAddress: 'info@qwikresume.com',
-      address: 'Islamabad 44100',
-      brief:
-        '5 years of experience as a Secondary English Teacher. Dedicated professional experienced in diverse and fast-paced environments seeks a position in an organization where strengths in strategy and leadership will be applied to further the goals of the team. ',
-    },
-    experiences: [
-      {
-        editing: false,
-        title: 'Secondry School Math Teacher',
-        company: 'Heartland Christian School',
-        startDateMonth: 'July',
-        startDateYear: '2016',
-        endDateMonth: 'May',
-        endDataYear: '2017',
-        description:
-          '<ul class="q-pr-sm">\n' +
-          '            <li>\n' +
-          '              Complete all grading, create progress reports and conduct parent conferences in a\n' +
-          '              timely manner.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Review curriculum and devise alternate approaches to presenting lessons to increase\n' +
-          '              student understanding (working directly with students and parents).\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Communicate with parents, students, and other teachers on a regular basis to develop\n' +
-          '              and update personal learning plans and schedules, score assessments, provide feedback\n' +
-          '              on student work, suggest instructional approaches and strategies, monitor completion\n' +
-          '              of assignments and coach special projects.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Work collaboratively with other teachers to ensure that all students are successfully\n' +
-          '              progressing through the program, that parents have a central point of contact, and\n' +
-          '              that tasks are distributed among the teachers.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Develop a general knowledge of the entire program&rsquo;s k-12 curriculum and a very\n' +
-          '              detailed knowledge of the courses for which responsible.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Support students and parents with alternate strategies and provide additional\n' +
-          '              assistance with daily assignments and projects.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Communicate regularly with parents, students, and curriculum specialists through the\n' +
-          '              use of a computer and telephone.\n' +
-          '            </li>\n' +
-          '          </ul>',
-      },
-      {
-        editing: false,
-        title: 'Secondry School Math Teacher',
-        company: 'Heartland Christian School',
-        startDateMonth: 'July',
-        startDateYear: '2016',
-        endDateMonth: 'May',
-        endDataYear: '2017',
-        description:
-          '<ul class="q-pr-sm">\n' +
-          '            <li>\n' +
-          '              Complete all grading, create progress reports and conduct parent conferences in a\n' +
-          '              timely manner.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Review curriculum and devise alternate approaches to presenting lessons to increase\n' +
-          '              student understanding (working directly with students and parents).\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Communicate with parents, students, and other teachers on a regular basis to develop\n' +
-          '              and update personal learning plans and schedules, score assessments, provide feedback\n' +
-          '              on student work, suggest instructional approaches and strategies, monitor completion\n' +
-          '              of assignments and coach special projects.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Work collaboratively with other teachers to ensure that all students are successfully\n' +
-          '              progressing through the program, that parents have a central point of contact, and\n' +
-          '              that tasks are distributed among the teachers.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Develop a general knowledge of the entire program&rsquo;s k-12 curriculum and a very\n' +
-          '              detailed knowledge of the courses for which responsible.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Support students and parents with alternate strategies and provide additional\n' +
-          '              assistance with daily assignments and projects.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Communicate regularly with parents, students, and curriculum specialists through the\n' +
-          '              use of a computer and telephone.\n' +
-          '            </li>\n' +
-          '          </ul>',
-      },
-      {
-        editing: false,
-        title: 'Substitute Teacher',
-        company: 'School Board Of Highlands County',
-        startDateMonth: 'September',
-        startDateYear: '2012',
-        endDateMonth: 'June',
-        endDataYear: '2016',
-        description:
-          '<ul class="q-pr-sm">\n' +
-          '            <li>\n' +
-          '              Apply organization and planning skills to adapt to changing expectations within the\n' +
-          '              classroom environment.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Determine teachers daily lesson plans and expedited instructions and assistance to\n' +
-          '              students. Adapt to differing personalities, age groups, grade levels, and subject\n' +
-          '              topics necessary for assignments.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Monitor and moderate behavior of children, rewards and disciplinary procedures when\n' +
-          '              applicable.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Carry-out county school board policies and procedures as well as state and federal\n' +
-          '              education regulations.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Manage regional field trips and make efforts to integrate trips into the curriculum.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Devise and implement virtual methods of creating and maintaining a &ldquo;school\n' +
-          '              community&rdquo; using plan book and renewed online systems.\n' +
-          '            </li>\n' +
-          '          </ul>',
-      },
-      {
-        editing: false,
-        title: 'Substitute Teacher',
-        company: 'School Board Of Highlands County',
-        startDateMonth: 'September',
-        startDateYear: '2012',
-        endDateMonth: 'June',
-        endDataYear: '2016',
-        description:
-          '<ul class="q-pr-sm">\n' +
-          '            <li>\n' +
-          '              Apply organization and planning skills to adapt to changing expectations within the\n' +
-          '              classroom environment.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Determine teachers daily lesson plans and expedited instructions and assistance to\n' +
-          '              students. Adapt to differing personalities, age groups, grade levels, and subject\n' +
-          '              topics necessary for assignments.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Monitor and moderate behavior of children, rewards and disciplinary procedures when\n' +
-          '              applicable.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Carry-out county school board policies and procedures as well as state and federal\n' +
-          '              education regulations.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Manage regional field trips and make efforts to integrate trips into the curriculum.\n' +
-          '            </li>\n' +
-          '            <li>\n' +
-          '              Devise and implement virtual methods of creating and maintaining a &ldquo;school\n' +
-          '              community&rdquo; using plan book and renewed online systems.\n' +
-          '            </li>\n' +
-          '          </ul>',
-      },
-    ],
-    educations: [
-      {
-        editing: false,
-        levelOfEducation: "Bachelor's",
-        fieldOfStudy: 'Mathematics and Basic Science',
-        school: 'International Islamic University',
-        schoolLocation: 'Islamabad',
-        startDateMonth: 'September',
-        startDateYear: '2004',
-        endDateMonth: 'June',
-        endDataYear: '2011',
-      },
-      {
-        editing: false,
-        levelOfEducation: "Bachelor's",
-        fieldOfStudy: 'Mathematics and Basic Science',
-        school: 'International Islamic University',
-        schoolLocation: 'Islamabad',
-        startDateMonth: 'September',
-        startDateYear: '2004',
-        endDateMonth: 'June',
-        endDataYear: '2011',
-      },
-    ],
-    skills: ['Creative lesson planning', 'SMART board interactive displays', 'Time management'],
-    languages: [
-      {
-        editing: false,
-        name: 'English',
-        fluencyLevel: 'Fluent',
-      },
-      {
-        editing: false,
-        name: 'English',
-        fluencyLevel: 'Fluent',
-      },
-      {
-        editing: false,
-        name: 'Urdu',
-        fluencyLevel: 'Fluent',
-      },
-      {
-        editing: false,
-        name: 'Urdu',
-        fluencyLevel: 'Fluent',
-      },
-      {
-        editing: false,
-        name: 'Pashto',
-        fluencyLevel: 'Native',
-      },
-      {
-        editing: false,
-        name: 'Pashto',
-        fluencyLevel: 'Native',
-      },
-    ],
+    intro: {},
+    experiences: [],
+    educations: [],
+    skills: [],
+    languages: [],
   }),
+  actions: {
+    async getResume(background = true) {
+      const user = useUserStore();
+      const that = this;
+      try {
+        this.resumeLoading = !background;
+        const response = await axios.get('http://127.0.0.1:8000/api/v1/resume/', {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+        that.noResume = false;
+        that.intro = response.data.intro;
+        that.intro.editing = false;
+        that.experiences = response.data.experiences;
+        that.educations = response.data.educations;
+        that.skills = response.data.skills;
+        that.languages = response.data.languages;
+        that.initBufferExp();
+        that.initBufferEdu();
+        that.initBufferLang();
+        that.resumeLoading = false;
+      } catch (e) {
+        this.resumeLoading = false;
+        that.noResume = true;
+      }
+    },
+    async createResume(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        user: user.userId,
+        heading: payload.heading,
+        address: payload.address,
+        intro: payload.brief,
+        email: payload.email,
+      };
+
+      console.log('this goes into: ', dataBlock);
+
+      await axios.post('http://127.0.0.1:8000/api/v1/resume/create', dataBlock, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+    },
+    async updateResume(payload) {
+      const user = useUserStore();
+      console.log('wow');
+
+      const dataBlock = {
+        user: user.userId,
+        heading: payload.headline,
+        address: payload.address,
+        intro: payload.brief,
+        email: payload.emailAddress,
+      };
+
+      console.log('this goes into: ', dataBlock);
+
+      await axios.put('http://127.0.0.1:8000/api/v1/resume/update/' + user.userId, dataBlock, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+    },
+    async createResumeExp(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        title: payload.title,
+        org: payload.org,
+        start_date_month: payload.start_date_month,
+        start_date_year: payload.start_date_year,
+        end_date_month: payload.end_date_month,
+        end_date_year: payload.endDataYear,
+        description: payload.description,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/exp', dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+
+        await this.getResume();
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async updateResumeExp(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        title: payload.title,
+        org: payload.org,
+        start_date_month: payload.start_date_month,
+        start_date_year: payload.start_date_year,
+        end_date_month: payload.end_date_month,
+        end_date_year: payload.endDataYear,
+        description: payload.description,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.put('http://127.0.0.1:8000/api/v1/resume/update/exp/' + payload.id, dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async deleteResumeExp(payload) {
+      const user = useUserStore();
+
+      try {
+        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/exp/' + payload, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async createResumeEdu(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        level: payload.level,
+        field_of_study: payload.field_of_study,
+        school: payload.school,
+        schoolLocation: 'not done yet',
+        start_date_month: payload.start_date_month,
+        start_date_year: payload.start_date_year,
+        end_date_month: payload.end_date_month,
+        end_date_year: payload.end_date_year,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/edu', dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async updateResumeEdu(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        level: payload.level,
+        field_of_study: payload.field_of_study,
+        school: payload.school,
+        schoolLocation: 'not done yet',
+        start_date_month: payload.start_date_month,
+        start_date_year: payload.start_date_year,
+        end_date_month: payload.end_date_month,
+        end_date_year: payload.end_date_year,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.put('http://127.0.0.1:8000/api/v1/resume/update/edu/' + payload.id, dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async deleteResumeEdu(payload) {
+      const user = useUserStore();
+
+      try {
+        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/edu/' + payload, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async createResumeSkill(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        skill: payload.skill,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/skill', dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+        await this.getResume();
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async updateResumeSkill(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        skill: payload.skill,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.put(
+          'http://127.0.0.1:8000/api/v1/resume/update/skill/' + payload.id,
+          dataBlock,
+          {
+            headers: {
+              Authorization: 'Token ' + user.token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async deleteResumeSkill(payload) {
+      const user = useUserStore();
+
+      try {
+        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/skill/' + payload, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async createResumeLang(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        language: payload.language,
+        level_of_fluency: payload.level_of_fluency,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/lang', dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+        await this.getResume();
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async updateResumeLang(payload) {
+      const user = useUserStore();
+
+      const dataBlock = {
+        language: payload.language,
+        level_of_fluency: payload.level_of_fluency,
+        resume: user.userId,
+      };
+
+      try {
+        await axios.put(
+          'http://127.0.0.1:8000/api/v1/resume/update/lang/' + payload.id,
+          dataBlock,
+          {
+            headers: {
+              Authorization: 'Token ' + user.token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    async deleteResumeLang(payload) {
+      const user = useUserStore();
+
+      try {
+        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/lang/' + payload, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    initBufferExp() {
+      let tempArr = [];
+
+      this.experiences.forEach((item) => {
+        item.editing = false;
+        tempArr.push(item);
+        tempArr.push(item);
+      });
+
+      this.experiences = tempArr;
+    },
+    initBufferEdu() {
+      let tempArr = [];
+      this.educations.forEach((item) => {
+        item.editing = false;
+        tempArr.push(item);
+        tempArr.push(item);
+      });
+      this.educations = tempArr;
+    },
+    initBufferLang() {
+      let tempArr = [];
+      this.languages.forEach((item) => {
+        item.editing = false;
+        tempArr.push(item);
+        tempArr.push(item);
+      });
+      this.languages = tempArr;
+    },
+  },
 });

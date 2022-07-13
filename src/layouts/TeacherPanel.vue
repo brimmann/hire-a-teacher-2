@@ -1,6 +1,9 @@
 <template>
   <q-layout view="lHh LpR lFf">
-    <q-header class="bg-primary text-white">
+    <q-header
+      class="bg-primary text-white"
+      v-if="(resumeStore.adding.resume || !resumeStore.noResume) || !($route.name === 'resume')"
+    >
       <q-toolbar>
         <q-btn
           dense
@@ -25,11 +28,25 @@
             <q-btn flat round color="primary" icon="search" />
           </template>
         </q-input>
-        <q-space/>
-        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675"/>
-        <q-btn stretch flat label="Print" icon="print" no-caps v-if="$route.name === 'resume' && $q.screen.width > 675"/>
-        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675"/>
-        <q-btn stretch flat label="Download PDF" icon="download" no-caps v-if="$route.name === 'resume' && $q.screen.width > 675"/>
+        <q-space />
+        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
+        <q-btn
+          stretch
+          flat
+          label="Print"
+          icon="print"
+          no-caps
+          v-if="$route.name === 'resume' && $q.screen.width > 675"
+        />
+        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
+        <q-btn
+          stretch
+          flat
+          label="Download PDF"
+          icon="download"
+          no-caps
+          v-if="$route.name === 'resume' && $q.screen.width > 675"
+        />
         <q-btn-dropdown
           flat
           padding="0"
@@ -43,12 +60,11 @@
           v-if="$q.screen.width < 675"
         >
           <q-list separator>
-
             <q-item clickable v-close-popup @click="onItemClick">
-              <q-btn stretch flat label="Download PDF" icon="download" no-caps/>
+              <q-btn stretch flat label="Download PDF" icon="download" no-caps />
             </q-item>
             <q-item clickable v-close-popup @click="onItemClick">
-              <q-btn stretch flat label="Print" icon="print" no-caps/>
+              <q-btn stretch flat label="Print" icon="print" no-caps />
             </q-item>
           </q-list>
         </q-btn-dropdown>
@@ -108,9 +124,12 @@
 
       <q-img class="absolute-top" src="../assets/background-mat-1.jpg" style="height: 200px">
         <div class="absolute-bottom bg-transparent">
-          <q-avatar size="100px" class="q-mb-sm">
-            <img src="../assets/ali.jpg" />
-          </q-avatar>
+          <div
+            class="bg-grey-1 text-black text-h4 text-center row flex-center"
+            style="border-radius: 50%; height: 100px; width: 100px"
+          >
+            <div>{{ avatar }}</div>
+          </div>
           <div class="text-weight-bold q-pa-xs">Mohammad Ali</div>
           <q-chip outline square dense color="white" text-color="white" icon="star"> 4.7 </q-chip>
           <q-chip outline square dense color="white" label="Hired" text-color="white" icon="check">
@@ -126,12 +145,28 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia/dist/pinia';
+import { useResumeStore } from 'stores/resume';
+import {useUserStore} from "stores/user";
+
 export default {
   name: 'TeacherPanel',
   data() {
     return {
       leftDrawerOpen: false,
     };
+  },
+  computed: {
+    ...mapStores(useResumeStore, useUserStore),
+    avatar() {
+      const fullName = this.userStore.userDetails.full_name;
+      const index = fullName.indexOf(' ');
+      if (index !== -1) {
+        return fullName[0] + fullName[index + 1];
+      } else {
+        return fullName[0] + fullName[1];
+      }
+    }
   },
   methods: {
     toggleLeftDrawer() {

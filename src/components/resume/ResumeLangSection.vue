@@ -4,8 +4,8 @@
       <div class="q-ma-none q-pa-none" v-if="index % 2 === 0" v-show="!lang.editing">
         <q-card-section class="row q-pt-sm items-center q-pb-xs">
           <div>
-            <span class="text-subtitle1 text-bold">{{ lang.name }}</span>
-            <span class="text-body2 text-grey-8">- {{ lang.fluencyLevel }}</span>
+            <span class="text-subtitle1 text-bold">{{ lang.language }}</span>
+            <span class="text-body2 text-grey-8">- {{ lang.level_of_fluency }}</span>
           </div>
           <q-space />
           <q-btn flat size="md" color="primary" icon="edit" @click="onEditLang(index)" />
@@ -19,11 +19,11 @@
         class="q-mb-md q-pa-lg max-width column"
         style="width: 100%; gap: 16px"
       >
-        <q-input outlined v-model="lang.name" label="Field of study" />
+        <q-input outlined v-model="lang.language" label="Field of study" />
         <q-select
           outlined
           square
-          v-model="lang.fluencyLevel"
+          v-model="lang.level_of_fluency"
           :options="langLevelList"
           label="Level of fluency"
         />
@@ -68,12 +68,16 @@ export default {
       this.resumeStore.languages[index].editing = true;
       this.resumeStore.languages[index + 1].editing = true;
     },
-    onSaveChangesLang(index) {
+    async onSaveChangesLang(index) {
       this.resumeStore.languages[index - 1] = JSON.parse(
         JSON.stringify(this.resumeStore.languages[index])
       );
       this.resumeStore.languages[index].editing = false;
       this.resumeStore.languages[index - 1].editing = false;
+
+      let payload = JSON.parse(JSON.stringify(this.resumeStore.languages[index]));
+      payload.id = this.resumeStore.languages[index].id;
+      await this.resumeStore.updateResumeLang(payload);
     },
     onDiscardChangesLang(index) {
       this.resumeStore.languages[index] = JSON.parse(
@@ -82,8 +86,10 @@ export default {
       this.resumeStore.languages[index].editing = false;
       this.resumeStore.languages[index - 1].editing = false;
     },
-    onDeleteLang(index) {
+    async onDeleteLang(index) {
+      const id = this.resumeStore.languages[index].id;
       this.resumeStore.languages.splice(index, 2);
+      await this.resumeStore.deleteResumeLang(id);
     },
   },
 };

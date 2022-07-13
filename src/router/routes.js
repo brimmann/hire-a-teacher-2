@@ -18,8 +18,15 @@ const routes = [
     component: () => import('layouts/TeacherPanel.vue'),
     children: [
       { path: 'search', component: () => import('pages/JobSearch'), name: 'search' },
-      { path: 'resume', component: () => import('pages/ResumePage'), name: 'resume' },
-      { path: 'applications', component: () => import('pages/JobApplications') },
+      {
+        path: 'resume',
+        component: () => import('pages/ResumeContainer'),
+        name: 'resume',
+      },
+      {
+        path: 'applications',
+        component: () => import('pages/JobApplications'),
+      },
       { path: 'offers', component: () => import('pages/JobOffers') },
     ],
   },

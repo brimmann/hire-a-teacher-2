@@ -92,13 +92,17 @@ export default {
   methods: {
     async login() {
       this.loggingIn = true;
-      await this.userStore.login({
-        email: this.email,
-        password: this.password,
-        type: this.loginMode,
-      });
-      this.loggingIn = false;
-      this.$router.push("/teacher");
+      try {
+        await this.userStore.login({
+          email: this.email,
+          password: this.password,
+          type: this.loginMode,
+        });
+        this.loggingIn = false;
+        await this.$router.push("/teacher");
+      } catch (e) {
+        this.loggingIn =false;
+      }
     },
   },
 };

@@ -5,9 +5,9 @@
     style="width: 100%"
     v-if="resumeStore.intro.editing"
   >
-    <q-input outlined v-model="introBuffer.fullName" label="Full Name" />
+    <q-input outlined hint="Full Name must be modified in settings" readonly v-model="introBuffer.fullName" label="Full Name" />
     <q-input outlined v-model="introBuffer.headline" label="Title" />
-    <q-input outlined v-model="introBuffer.phoneNumber" label="Phone Number" />
+    <q-input outlined hint="Phone Number must be modified in settings" readonly v-model="introBuffer.phoneNumber" label="Phone Number" />
     <q-input outlined v-model="introBuffer.emailAddress" label="Email Address" />
     <q-input outlined v-model="introBuffer.address" label="Address" />
     <q-input outlined type="textarea" v-model="introBuffer.brief" label="Description" />
@@ -25,7 +25,7 @@
     </div>
     <q-space />
   </q-card>
-  <q-card flat class="max-width" v-else>
+  <q-card flat class="max-width" style="width: 100%" v-else>
     <q-card-section class="row">
       <div class="text-h5" ref="test-ref">{{ resumeStore.intro.fullName }}</div>
       <q-space />
@@ -42,15 +42,23 @@
 </template>
 
 <script>
-import {mapStores} from "pinia/dist/pinia.esm-browser";
-import {useResumeStore} from "stores/resume";
+import { mapStores } from 'pinia/dist/pinia.esm-browser';
+import { useResumeStore } from 'stores/resume';
 
 export default {
-  name: "ResumeIntroSection",
+  name: 'ResumeIntroSection',
   data() {
     return {
-      introBuffer: null,
-    }
+      introBuffer: {
+        editing: false,
+        fullName: '',
+        headline: '',
+        phoneNumber: '',
+        emailAddress: '',
+        address: '',
+        brief:''
+      },
+    };
   },
   computed: {
     ...mapStores(useResumeStore),
@@ -59,6 +67,7 @@ export default {
     onSaveChangesIntro() {
       this.resumeStore.intro = this.introBuffer;
       this.resumeStore.intro.editing = false;
+      this.resumeStore.updateResume(this.introBuffer);
     },
     onDiscardChangesIntro() {
       this.introBuffer = this.resumeStore.intro;
@@ -67,10 +76,8 @@ export default {
   },
   mounted() {
     this.introBuffer = JSON.parse(JSON.stringify(this.resumeStore.intro));
-  }
-}
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

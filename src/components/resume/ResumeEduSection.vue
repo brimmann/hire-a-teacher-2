@@ -9,12 +9,10 @@
       style="width: 100%"
     >
       <q-card-section class="row q-pt-sm items-center q-pb-xs">
-        <div class="text-subtitle1 text-bold">
-          {{ edu.levelOfEducation }} in {{ edu.fieldOfStudy }}
-        </div>
+        <div class="text-subtitle1 text-bold">{{ edu.level }} in {{ edu.field_of_study }}</div>
         <q-space />
         <q-btn flat size="md" color="primary" icon="edit" @click="onEditEdu(index)" />
-        <q-btn flat size="md" color="primary" icon="delete" @click="onDeleteEdu(index)"/>
+        <q-btn flat size="md" color="primary" icon="delete" @click="onDeleteEdu(index)" />
       </q-card-section>
       <q-separator inset />
       <q-card-section class="q-pt-xs">
@@ -22,8 +20,8 @@
           {{ edu.school }}
         </div>
         <div class="text-body2 text-grey-7">
-          {{ edu.startDateMonth }} {{ edu.startDateYear }} – {{ edu.endDateMonth }}
-          {{ edu.endDataYear }}
+          {{ edu.start_date_month }} {{ edu.start_date_year }} – {{ edu.end_date_month }}
+          {{ edu.end_date_year }}
         </div>
       </q-card-section>
     </q-card>
@@ -39,11 +37,11 @@
         style="width: 35%"
         outlined
         square
-        v-model="edu.levelOfEducation"
+        v-model="edu.level"
         :options="levelOfEducationList"
         label="Level of education"
       />
-      <q-input outlined v-model="edu.fieldOfStudy" label="Field of study" />
+      <q-input outlined v-model="edu.field_of_study" label="Field of study" />
       <q-input outlined v-model="edu.school" label="School" />
       <div style="width: 50%">
         <div class="text-body1">From</div>
@@ -52,14 +50,14 @@
             style="width: 35%"
             outlined
             square
-            v-model="edu.startDateYear"
+            v-model="edu.start_date_year"
             :options="yearsList"
             label="Year"
           />
           <q-select
             style="width: 62%"
             outlined
-            v-model="edu.startDateMonth"
+            v-model="edu.start_date_month"
             :options="monthsList"
             label="Month"
           />
@@ -72,14 +70,14 @@
             style="width: 35%"
             outlined
             square
-            v-model="edu.endDataYear"
+            v-model="edu.end_date_year"
             :options="yearsList"
             label="Year"
           />
           <q-select
             style="width: 62%"
             outlined
-            v-model="edu.endDateMonth"
+            v-model="edu.end_date_month"
             :options="monthsList"
             label="Month"
           />
@@ -102,11 +100,11 @@
 </template>
 
 <script>
-import {mapStores} from "pinia/dist/pinia.esm-browser";
-import {useResumeStore} from "stores/resume";
+import { mapStores } from 'pinia/dist/pinia.esm-browser';
+import { useResumeStore } from 'stores/resume';
 
 export default {
-  name: "ResumeEduSection",
+  name: 'ResumeEduSection',
   data() {
     return {
       yearsList: [
@@ -256,7 +254,7 @@ export default {
         'PhD',
         'Other',
       ],
-    }
+    };
   },
   computed: {
     ...mapStores(useResumeStore),
@@ -267,23 +265,31 @@ export default {
       this.resumeStore.educations[index + 1].editing = true;
       console.log('debug2', index);
     },
-    onDeleteEdu(index) {
+    async onDeleteEdu(index) {
+      const id = this.resumeStore.educations[index].id;
       this.resumeStore.educations.splice(index, 2);
+      await this.resumeStore.deleteResumeEdu(id);
     },
-    onSaveChangesEdu(index) {
-      this.resumeStore.educations[index - 1] = JSON.parse(JSON.stringify(this.resumeStore.educations[index]));
+    async onSaveChangesEdu(index) {
+      this.resumeStore.educations[index - 1] = JSON.parse(
+        JSON.stringify(this.resumeStore.educations[index])
+      );
       this.resumeStore.educations[index].editing = false;
       this.resumeStore.educations[index - 1].editing = false;
+
+      let payload = JSON.parse(JSON.stringify(this.resumeStore.educations[index]));
+      payload.id = this.resumeStore.educations[index].id;
+      await this.resumeStore.updateResumeEdu(payload);
     },
     onDiscardChangesEdu(index) {
-      this.resumeStore.educations[index] = JSON.parse(JSON.stringify(this.resumeStore.educations[index-1]));
+      this.resumeStore.educations[index] = JSON.parse(
+        JSON.stringify(this.resumeStore.educations[index - 1])
+      );
       this.resumeStore.educations[index].editing = false;
       this.resumeStore.educations[index - 1].editing = false;
     },
-  }
-}
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

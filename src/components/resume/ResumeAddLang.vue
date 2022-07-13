@@ -3,11 +3,11 @@
     class="q-mb-md max-width column"
     style="width: 100%; gap: 16px"
   >
-    <q-input outlined v-model="lang.name" label="Language" />
+    <q-input outlined v-model="lang.language" label="Language" />
     <q-select
       outlined
-      square
-      v-model="lang.fluencyLevel"
+      level_of_fluency
+      v-model="lang.level_of_fluency"
       :options="langLevelList"
       label="Level of fluency"
     />
@@ -41,8 +41,8 @@ export default {
     return {
       lang: {
         editing: false,
-        name: '',
-        fluencyLevel: '',
+        language: '',
+        level_of_fluency: '',
       },
       langLevelList: ['Beginner', 'Intermediate', 'Fluent', 'Expert', 'Native'],
     }
@@ -51,22 +51,23 @@ export default {
     ...mapStores(useResumeStore),
   },
   methods: {
-    onSave() {
+    async onSave() {
       this.resumeStore.languages.push(this.lang);
       this.resumeStore.languages.push(this.lang);
+      await this.resumeStore.createResumeLang(this.lang);
       this.resumeStore.adding.newLang = false;
       this.lang = {
         editing: false,
-        name: '',
-        fluencyLevel: '',
+        language: '',
+        level_of_fluency: '',
       }
     },
     onDiscard() {
       this.resumeStore.adding.newLang = false;
       this.lang = {
         editing: false,
-        name: '',
-        fluencyLevel: '',
+        language: '',
+        level_of_fluency: '',
       }
     }
   }

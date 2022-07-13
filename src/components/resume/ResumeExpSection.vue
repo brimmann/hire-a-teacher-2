@@ -1,7 +1,7 @@
 <template>
   <template v-for="(exp, index) in resumeStore.experiences" :key="index">
-    <div v-if="index % 2 === 0" class="column items-center" style="width: 100%;">
-      <q-card flat bordered class="q-mb-md max-width" v-show="!exp.editing" style="width: 100%;">
+    <div v-if="index % 2 === 0" class="column items-center" style="width: 100%">
+      <q-card flat bordered class="q-mb-md max-width" v-show="!exp.editing" style="width: 100%">
         <q-card-section class="row q-pt-sm items-center q-pb-xs">
           <div class="text-subtitle1 text-bold">{{ exp.title }}</div>
           <q-space />
@@ -10,16 +10,16 @@
         </q-card-section>
         <q-separator inset />
         <q-card-section class="q-pt-xs">
-          <div class="text-subtitle1 text-grey-8">{{ exp.company }}</div>
+          <div class="text-subtitle1 text-grey-8">{{ exp.org }}</div>
           <div class="text-body2 text-grey-7">
-            {{ exp.startDateMonth + ' ' + exp.startDateYear }} –
-            {{ exp.endDateMonth + ' ' + exp.endDataYear }}
+            {{ exp.start_date_month + ' ' + exp.start_date_year }} –
+            {{ exp.end_date_month + ' ' + exp.end_date_year }}
           </div>
           <div class="text-body2 q-mt-sm" v-html="exp.description"></div>
         </q-card-section>
       </q-card>
     </div>
-    <div v-else :ref="'editing-exp-' + index" class="column items-center" style="width: 100%;">
+    <div v-else :ref="'editing-exp-' + index" class="column items-center" style="width: 100%">
       <q-card
         flat
         bordered
@@ -28,7 +28,7 @@
         v-show="exp.editing"
       >
         <q-input outlined v-model="exp.title" label="Title" />
-        <q-input outlined v-model="exp.company" label="Companay" />
+        <q-input outlined v-model="exp.org" label="Companay" />
         <div style="width: 50%">
           <div class="text-body1">From</div>
           <div class="row justify-between items-center">
@@ -36,14 +36,14 @@
               style="width: 35%"
               outlined
               square
-              v-model="exp.startDateYear"
+              v-model="exp.start_date_year"
               :options="yearsList"
               label="Year"
             />
             <q-select
               style="width: 62%"
               outlined
-              v-model="exp.startDateMonth"
+              v-model="exp.start_date_month"
               :options="monthsList"
               label="Month"
             />
@@ -56,14 +56,14 @@
               style="width: 35%"
               outlined
               square
-              v-model="exp.endDataYear"
+              v-model="exp.end_date_year"
               :options="yearsList"
               label="Year"
             />
             <q-select
               style="width: 62%"
               outlined
-              v-model="exp.endDateMonth"
+              v-model="exp.end_date_month"
               :options="monthsList"
               label="Month"
             />
@@ -74,13 +74,12 @@
             square
             v-model="exp.description"
             :definitions="{
-                bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' },
-              }"
+              bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' },
+            }"
             :toolbar="[
-                ['unordered', 'ordered'],
-
-                ['undo', 'redo'],
-              ]"
+              ['unordered', 'ordered'],
+              ['undo', 'redo'],
+            ]"
           />
         </div>
         <div class="flex-center">
@@ -93,12 +92,7 @@
             @click="onExpDiscardChanges(index)"
             unelevated
           />
-          <q-btn
-            color="primary"
-            label="Save Changes"
-            unelevated
-            @click="onExpSaveChanges(index)"
-          />
+          <q-btn color="primary" label="Save Changes" unelevated @click="onExpSaveChanges(index)" />
         </div>
       </q-card>
     </div>
@@ -106,11 +100,11 @@
 </template>
 
 <script>
-import {mapStores} from "pinia/dist/pinia.esm-browser";
-import {useResumeStore} from "stores/resume";
+import { mapStores } from 'pinia/dist/pinia.esm-browser';
+import { useResumeStore } from 'stores/resume';
 
 export default {
-  name: "ResumeExpSection",
+  name: 'ResumeExpSection',
   data() {
     return {
       yearsList: [
@@ -252,7 +246,7 @@ export default {
         'November',
         'December',
       ],
-    }
+    };
   },
   computed: {
     ...mapStores(useResumeStore),
@@ -263,29 +257,36 @@ export default {
       this.resumeStore.experiences[index + 1].editing = true;
       console.log('edit key: ', index, this.experiencesBuffer);
     },
-    onExpSaveChanges(index) {
+    async onExpSaveChanges(index) {
       console.log('Debug-1', index);
-      this.resumeStore.experiences[index - 1] = JSON.parse(JSON.stringify(this.resumeStore.experiences[index]));
+      this.resumeStore.experiences[index - 1] = JSON.parse(
+        JSON.stringify(this.resumeStore.experiences[index])
+      );
       this.resumeStore.experiences[index].editing = false;
       this.resumeStore.experiences[index - 1].editing = false;
       const scrollAmount = this.$refs['editing-exp-' + index][0].clientHeight / 2;
       // console.log(scrollAmount);
       window.scrollBy(0, -scrollAmount);
+      let payload = JSON.parse(JSON.stringify(this.resumeStore.experiences[index]));
+      payload.id = this.resumeStore.experiences[index].id;
+      await this.resumeStore.updateResumeExp(payload);
     },
     onExpDiscardChanges(index) {
-      this.resumeStore.experiences[index] = JSON.parse(JSON.stringify(this.resumeStore.experiences[index - 1]));
+      this.resumeStore.experiences[index] = JSON.parse(
+        JSON.stringify(this.resumeStore.experiences[index - 1])
+      );
       this.resumeStore.experiences[index].editing = false;
       this.resumeStore.experiences[index - 1].editing = false;
       const scrollAmount = this.$refs['editing-exp-' + index][0].clientHeight / 2;
       window.scrollBy(0, -scrollAmount);
     },
-    onDeleteExp(index) {
+    async onDeleteExp(index) {
+      const id = this.resumeStore.experiences[index].id;
       this.resumeStore.experiences.splice(index, 2);
+      await this.resumeStore.deleteResumeExp(id);
     },
-  }
-}
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

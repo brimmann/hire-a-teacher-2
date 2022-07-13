@@ -36,10 +36,13 @@ export default {
     ...mapStores(useResumeStore),
   },
   methods: {
-    onSave() {
-      this.resumeStore.skills.push(this.skill);
-      this.skill = '';
+    async onSave() {
+      this.resumeStore.skills.push({
+        skill: this.skill
+      });
       this.resumeStore.adding.newSkill = false;
+      await this.resumeStore.createResumeSkill({skill: this.skill});
+      this.skill = '';
     },
     onDiscard() {
       this.skill = '';

@@ -1,6 +1,7 @@
 <template>
   <q-page padding class="column items-center">
-    <resume-intro-section/>
+    <resume-adding v-if="resumeStore.adding.resume && resumeStore.noResume"/>
+    <resume-intro-section v-else/>
     <q-bar style="border-radius: 0; width: 100%" class="row q-mb-md bg-primary max-width" tag="div">
       <div class="text-center text-white">Work Experience</div>
       <q-space />
@@ -126,10 +127,12 @@ import ResumeAddExp from "components/resume/ResumeAddExp";
 import ResumeAddEdu from "components/resume/ResumeAddEdu";
 import ResumeAddSkill from "components/resume/ResumeAddSkill";
 import ResumeAddLang from "components/resume/ResumeAddLang";
+import ResumeAdding from "components/resume/ResumeAdding";
 
 export default {
   name: 'ResumePage',
   components: {
+    ResumeAdding,
     ResumeAddLang,
     ResumeAddSkill,
     ResumeAddEdu,

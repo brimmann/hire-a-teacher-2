@@ -6,7 +6,7 @@
     style="width: 100%; gap: 16px"
   >
     <q-input outlined v-model="exp.title" label="Title" />
-    <q-input outlined v-model="exp.company" label="Organization" />
+    <q-input outlined v-model="exp.org" label="Organization" />
     <div style="width: 50%">
       <div class="text-body1">From</div>
       <div class="row justify-between items-center">
@@ -14,14 +14,14 @@
           style="width: 35%"
           outlined
           square
-          v-model="exp.startDateYear"
+          v-model="exp.start_date_year"
           :options="yearsList"
           label="Year"
         />
         <q-select
           style="width: 62%"
           outlined
-          v-model="exp.startDateMonth"
+          v-model="exp.start_date_month"
           :options="monthsList"
           label="Month"
         />
@@ -34,14 +34,14 @@
           style="width: 35%"
           outlined
           square
-          v-model="exp.endDataYear"
+          v-model="exp.end_date_year"
           :options="yearsList"
           label="Year"
         />
         <q-select
           style="width: 62%"
           outlined
-          v-model="exp.endDateMonth"
+          v-model="exp.end_date_month"
           :options="monthsList"
           label="Month"
         />
@@ -92,11 +92,11 @@ export default {
       exp: {
         editing: false,
         title: '',
-        company: '',
-        startDateMonth: '',
-        startDateYear: '',
-        endDateMonth: '',
-        endDataYear: '',
+        org: '',
+        start_date_month: '',
+        start_date_year: '',
+        end_date_month: '',
+        end_date_year: '',
         description: '',
       },
       yearsList: [
@@ -244,17 +244,18 @@ export default {
     ...mapStores(useResumeStore),
   },
   methods: {
-    onSave() {
+    async onSave() {
       this.resumeStore.experiences.push(this.exp);
       this.resumeStore.experiences.push(this.exp);
+      await this.resumeStore.createResumeExp(this.exp);
       this.exp = {
         editing: false,
         title: '',
-        company: '',
-        startDateMonth: '',
-        startDateYear: '',
-        endDateMonth: '',
-        endDataYear: '',
+        org: '',
+        start_date_month: '',
+        start_date_year: '',
+        end_date_month: '',
+        end_date_year: '',
         description: '',
       };
       this.resumeStore.adding.newExp = false;
@@ -264,11 +265,11 @@ export default {
       this.exp = {
         editing: false,
         title: '',
-        company: '',
-        startDateMonth: '',
-        startDateYear: '',
-        endDateMonth: '',
-        endDataYear: '',
+        org: '',
+        start_date_month: '',
+        start_date_year: '',
+        end_date_month: '',
+        end_date_year: '',
         description: '',
       }
     }

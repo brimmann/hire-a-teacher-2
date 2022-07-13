@@ -229,6 +229,7 @@ export default {
       this.registering = true;
       await this.userStore.registerTeacher(this.teacherRegData);
       this.registering = false;
+      await this.$router.push({name: "resume"});
     },
     async regOrg() {
       this.registering = true;

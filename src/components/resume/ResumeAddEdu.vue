@@ -10,11 +10,11 @@
       style="width: 35%"
       outlined
       square
-      v-model="edu.levelOfEducation"
+      v-model="edu.level"
       :options="levelOfEducationList"
       label="Level of education"
     />
-    <q-input outlined v-model="edu.fieldOfStudy" label="Field of study" />
+    <q-input outlined v-model="edu.field_of_study" label="Field of study" />
     <q-input outlined v-model="edu.school" label="School" />
     <div style="width: 50%">
       <div class="text-body1">From</div>
@@ -23,14 +23,14 @@
           style="width: 35%"
           outlined
           square
-          v-model="edu.startDateYear"
+          v-model="edu.start_date_year"
           :options="yearsList"
           label="Year"
         />
         <q-select
           style="width: 62%"
           outlined
-          v-model="edu.startDateMonth"
+          v-model="edu.start_date_month"
           :options="monthsList"
           label="Month"
         />
@@ -43,14 +43,14 @@
           style="width: 35%"
           outlined
           square
-          v-model="edu.endDataYear"
+          v-model="edu.end_date_year"
           :options="yearsList"
           label="Year"
         />
         <q-select
           style="width: 62%"
           outlined
-          v-model="edu.endDateMonth"
+          v-model="edu.end_date_month"
           :options="monthsList"
           label="Month"
         />
@@ -81,14 +81,14 @@ export default {
     return {
       edu: {
         editing: false,
-        levelOfEducation: "",
-        fieldOfStudy: '',
+        level: "",
+        field_of_study: '',
         school: '',
         schoolLocation: '',
-        startDateMonth: '',
-        startDateYear: '',
-        endDateMonth: '',
-        endDataYear: '',
+        start_date_month: '',
+        start_date_year: '',
+        end_date_month: '',
+        end_date_year: '',
       },
       yearsList: [
         '2022',
@@ -243,19 +243,20 @@ export default {
     ...mapStores(useResumeStore),
   },
   methods: {
-    onSave() {
+    async onSave() {
       this.resumeStore.educations.push(this.edu);
       this.resumeStore.educations.push(this.edu);
+      await this.resumeStore.createResumeEdu(this.edu);
       this.edu = {
         editing: false,
-          levelOfEducation: "",
-          fieldOfStudy: '',
-          school: '',
-          schoolLocation: '',
-          startDateMonth: '',
-          startDateYear: '',
-          endDateMonth: '',
-          endDataYear: '',
+        level: "",
+        field_of_study: '',
+        school: '',
+        schoolLocation: '',
+        start_date_month: '',
+        start_date_year: '',
+        end_date_month: '',
+        end_date_year: '',
       }
       this.resumeStore.adding.newEdu = false;
     },
@@ -263,14 +264,14 @@ export default {
       this.resumeStore.adding.newEdu = false;
       this.edu = {
         editing: false,
-        levelOfEducation: "",
-        fieldOfStudy: '',
+        level: "",
+        field_of_study: '',
         school: '',
         schoolLocation: '',
-        startDateMonth: '',
-        startDateYear: '',
-        endDateMonth: '',
-        endDataYear: '',
+        start_date_month: '',
+        start_date_year: '',
+        end_date_month: '',
+        end_date_year: '',
       }
     }
   }
