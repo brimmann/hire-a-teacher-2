@@ -26,8 +26,26 @@ const routes = [
       {
         path: 'applications',
         component: () => import('pages/JobApplications'),
+        name: 'app',
       },
-      { path: 'offers', component: () => import('pages/JobOffers') },
+      { path: 'offers', component: () => import('pages/JobOffers'), name: 'offers' },
+    ],
+  },
+  {
+    path: '/org',
+    component: () => import('../layouts/OrgPanel'),
+    children: [
+      { path: 'dashboard', component: () => import('pages/DashboardPage'), name: 'dashboard' },
+      {
+        path: 'search',
+        component: () => import('pages/TeacherSearch'),
+        name: 't-search',
+      },
+      {
+        path: 'applications',
+        component: () => import('pages/JobApplicationsOrg'),
+        name: 'o-app',
+      },
     ],
   },
 

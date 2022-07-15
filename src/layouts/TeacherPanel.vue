@@ -2,7 +2,7 @@
   <q-layout view="lHh LpR lFf">
     <q-header
       class="bg-primary text-white"
-      v-if="(resumeStore.adding.resume || !resumeStore.noResume) || !($route.name === 'resume')"
+      v-if="resumeStore.adding.resume || !resumeStore.noResume || !($route.name === 'resume')"
     >
       <q-toolbar>
         <q-btn
@@ -13,6 +13,11 @@
           @click="toggleLeftDrawer"
           v-if="$q.platform.is.mobile || !leftDrawerOpen"
         />
+
+        <template v-if="$q.screen.width > 675 && headerTitle">
+          <q-icon :name="headerTitle.icon" size="1.5rem" />
+          <q-toolbar-title>{{ headerTitle.text }}</q-toolbar-title>
+        </template>
 
         <q-input
           outlined
@@ -91,7 +96,7 @@
 
           <q-item clickable v-ripple to="/teacher/resume" exact>
             <q-item-section avatar>
-              <q-icon name="contact_page" color="black" />
+              <q-icon name="contact_page" />
             </q-item-section>
 
             <q-item-section> Resume </q-item-section>
@@ -130,7 +135,7 @@
           >
             <div>{{ avatar }}</div>
           </div>
-          <div class="text-weight-bold q-pa-xs">Mohammad Ali</div>
+          <div class="text-weight-bold q-pa-xs">{{ userStore.userDetails.full_name }}</div>
           <q-chip outline square dense color="white" text-color="white" icon="star"> 4.7 </q-chip>
           <q-chip outline square dense color="white" label="Hired" text-color="white" icon="check">
           </q-chip>
@@ -147,7 +152,7 @@
 <script>
 import { mapStores } from 'pinia/dist/pinia';
 import { useResumeStore } from 'stores/resume';
-import {useUserStore} from "stores/user";
+import { useUserStore } from 'stores/user';
 
 export default {
   name: 'TeacherPanel',
@@ -166,7 +171,21 @@ export default {
       } else {
         return fullName[0] + fullName[1];
       }
-    }
+    },
+    headerTitle() {
+      switch (this.$route.name) {
+        case 'search':
+          return null;
+        case 'resume':
+          return { text: 'Resume', icon: 'contact_page' };
+        case 'app':
+          return { text: 'Job applications', icon: 'work' };
+        case 'offers':
+          return { text: 'Job offers', icon: 'drafts' };
+        default:
+          return null;
+      }
+    },
   },
   methods: {
     toggleLeftDrawer() {
