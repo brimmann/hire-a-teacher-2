@@ -1,8 +1,6 @@
 <template>
   <q-layout view="lHh LpR lFf">
-    <q-header
-      class="bg-primary text-white"
-    >
+    <q-header class="bg-primary text-white">
       <q-toolbar>
         <q-btn
           dense
@@ -28,21 +26,26 @@
           </template>
         </q-input>
         <template v-if="$q.screen.width > 675 && headerTitle">
-          <q-icon :name="headerTitle.icon" size="1.5rem"/>
-          <q-toolbar-title>{{headerTitle.text}}</q-toolbar-title>
+          <q-icon :name="headerTitle.icon" size="1.5rem" />
+          <q-toolbar-title>
+            {{ headerTitle.text }}
+            <span v-if="subtitle" class="text-grey-5"> | {{ subtitle }}</span>
+          </q-toolbar-title>
         </template>
         <q-space />
-        <template v-if="$route.name === 'dashboard'">
-          <q-separator dark vertical/>
+        <template
+          v-if="$route.name === 'dashboard' && orgStore.determiners.dashboardState === 'jobs-list'"
+        >
+          <q-separator dark vertical />
           <q-btn
             stretch
             flat
             label="Post a new job"
             icon="add"
             no-caps
+            @click="orgStore.determiners.dashboardState = 'adding'"
           />
         </template>
-
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -65,7 +68,7 @@
 
           <q-item clickable v-ripple to="/org/search" exact>
             <q-item-section avatar>
-              <q-icon name="search"/>
+              <q-icon name="search" />
             </q-item-section>
 
             <q-item-section> Teacher search </q-item-section>
@@ -109,35 +112,53 @@
 </template>
 
 <script>
+import { mapStores } from 'pinia';
+import { useOrgStore } from 'stores/org';
+
 export default {
-  name: "OrgPanel",
+  name: 'OrgPanel',
   data() {
     return {
       leftDrawerOpen: false,
-    }
+    };
   },
   computed: {
+    ...mapStores(useOrgStore),
+    subtitle() {
+      if (this.orgStore.determiners.dashboardState === 'adding') {
+        return 'Adding a new job';
+      } else if(this.orgStore.determiners.dashboardState === 'editing') {
+        return 'Editing job';
+      } else {
+        return null;
+      }
+    },
     headerTitle() {
       switch (this.$route.name) {
         case 'dashboard':
-          return {text: 'Dashboard', icon: 'dashboard'}
+          return {
+            text: 'Dashboard',
+            icon: 'dashboard',
+          };
         case 't-search':
-          return null
+          return null;
         case 'o-app':
-          return {text: 'Applications', icon: 'drafts' }
+          return { text: 'Applications', icon: 'drafts' };
         default:
-          return null
+          return null;
       }
-    }
+    },
   },
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     },
-  }
-}
+  },
+};
 </script>
 
-<style scoped>
-
+<style>
+.max-width {
+  max-width: 800px;
+}
 </style>

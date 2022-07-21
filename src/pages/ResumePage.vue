@@ -2,7 +2,7 @@
   <q-page padding class="column items-center">
     <resume-adding v-if="resumeStore.adding.resume && resumeStore.noResume"/>
     <resume-intro-section v-else/>
-    <q-bar style="border-radius: 0; width: 100%" class="row q-mb-md bg-primary max-width" tag="div">
+    <q-bar style="border-radius: 0; width: 100%" class="row q-mb-md bg-teal max-width" tag="div">
       <div class="text-center text-white">Work Experience</div>
       <q-space />
       <q-btn flat size="md" color="white" icon="add_box" @click="addNewExp" v-if="!resumeStore.adding.newExp" />
@@ -11,7 +11,7 @@
     <resume-exp-section v-if="resumeStore.experiences.length !== 0"/>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-lg bg-primary max-width"
+      class="row q-mb-md q-mt-lg bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Educations</div>
@@ -22,7 +22,7 @@
     <resume-edu-section v-if="resumeStore.educations.length !== 0"/>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Skills</div>
@@ -33,7 +33,7 @@
     <resume-skills-section v-if="resumeStore.skills.length !== 0"/>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Languages</div>
@@ -44,7 +44,7 @@
     <resume-lang-section v-if="resumeStore.languages.length !== 0"/>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Additional Text</div>
@@ -54,7 +54,7 @@
     </q-bar>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Certifications / Licenses</div>
@@ -64,7 +64,7 @@
     </q-bar>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Military Service</div>
@@ -74,7 +74,7 @@
     </q-bar>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Awards</div>
@@ -84,7 +84,7 @@
     </q-bar>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Groups</div>
@@ -94,7 +94,7 @@
     </q-bar>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Patents</div>
@@ -104,7 +104,7 @@
     </q-bar>
     <q-bar
       style="border-radius: 0; width: 100%"
-      class="row q-mb-md q-mt-md bg-primary max-width"
+      class="row q-mb-md q-mt-md bg-teal max-width"
       tag="div"
     >
       <div class="text-center text-white">Publications</div>

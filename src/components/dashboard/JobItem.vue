@@ -1,53 +1,45 @@
 <template>
   <q-card square flat bordered class="my-card">
-    <q-card-section>
-      <div class="text-h6">Math Teacher</div>
-      <div class="text-subtitle1 text-light-blue cursor-pointer non-selectable">8 applications</div>
+    <q-card-section class="bg-teal text-white">
+      <div class="text-h6">{{ job.title }}</div>
+      <div class="text-subtitle1 text-teal-3 cursor-pointer non-selectable">{{ job.apps_no }} applications</div>
     </q-card-section>
 
     <q-separator />
 
     <q-card-actions>
-      <q-btn dense unelevated outline icon="delete" label="Delete job" />
-      <q-btn dense unelevated outline icon="edit" label="Edit job" />
+      <q-btn dense unelevated  no-caps icon="delete" label="Delete job" />
+      <q-btn dense unelevated  no-caps icon="edit" label="Edit job" @click="$emit('edit')"/>
       <q-toggle v-model="jobActive" label="Activate job" />
       <q-space />
       <q-btn
         :ripple="false"
         dense
         unelevated
-        outline
+        no-caps
         :icon="expanded ? 'keyboard_arrow_up' : 'keyboard_arrow_down'"
         @click="expanded = !expanded"
-        label="See details"
+        :label="expanded ? 'Hide details' : 'Show details'"
+        :class="{'text-warning': expanded}"
       />
     </q-card-actions>
     <q-slide-transition>
       <div v-show="expanded">
         <q-separator />
         <q-card-section class="q-mb-none">
-          <div class="text-caption q-mb-sm">Entry level - Full-time - Posted 2 days ago</div>
-          <div class="text-grey">Islamabad</div>
+          <div class="text-caption q-mb-sm">{{ job.exp_level }} - {{ job.type }} - Posted {{ postTime }}</div>
+          <div class="text-grey">{{ job.city }}</div>
           <div class="text-grey">Expires on July 22</div>
         </q-card-section>
-        <q-separator inset/>
-        <q-card-section class="text-body1">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium autem cum
-          cupiditate deserunt est eum, fugit inventore iure minima minus mollitia nam non nulla
-          omnis perspiciatis provident quae quidem quis reprehenderit sunt ut veniam voluptates?
-          Porro, sunt, voluptates? Ad atque aut autem consequuntur, corporis deserunt distinctio
-          doloremque dolores ducimus ea eos et ex fugit in itaque labore libero magni minima minus
-          modi molestiae mollitia neque non nulla officiis pariatur quae quam, quia quibusdam quidem
-          quo recusandae repellendus repudiandae sint sit vel vero! Ab adipisci at cupiditate
-          delectus doloribus hic in minima, minus modi quasi qui sunt totam voluptate voluptatem.
-        </q-card-section>
-        <q-separator inset/>
+        <q-separator inset />
+        <q-card-section class="text-body1">{{ job.description }}</q-card-section>
+        <q-separator inset />
         <q-card-section>
-          <div class="text-caption text-grey q-mb-sm">These tags will not appear to people that view jobs, it will only be used by search engines</div>
-          <q-chip class="text-uppercase" outline square dense label="#math"/>
-          <q-chip class="text-uppercase" outline square dense label="#school"/>
-          <q-chip class="text-uppercase" outline square dense label="#teacher"/>
-          <q-chip class="text-uppercase" outline square dense label="#partt"/>
+          <div class="text-caption text-grey q-mb-sm">
+            These tags will not appear to people that view jobs, it will only be used by search
+            engines
+          </div>
+          <q-chip v-for="(tag, index) in job.tags" class="text-uppercase" outline square dense :label="'#' + tag" :key="index"/>
         </q-card-section>
       </div>
     </q-slide-transition>
@@ -55,14 +47,69 @@
 </template>
 
 <script>
+
 export default {
   name: 'JobItem',
+  props: {
+    job: {
+      type: Object,
+      required: true,
+    }
+  },
+  emits: ['edit'],
   data() {
     return {
       jobActive: false,
       expanded: false,
+      currentDate: Date.now(),
+      interval: null
     };
   },
+  computed: {
+    postTime() {
+      const current = this.currentDate;
+      const previous = new Date(parseInt(this.job.date_posted));
+      const msPerMinute = 60 * 1000;
+      const msPerHour = msPerMinute * 60;
+      const msPerDay = msPerHour * 24;
+      const msPerMonth = msPerDay * 30;
+      const msPerYear = msPerDay * 365;
+      console.log(current, previous);
+
+      const elapsed = current - previous;
+
+      if (elapsed < msPerMinute) {
+        return Math.round(elapsed/1000) + ' seconds ago';
+      }
+
+      else if (elapsed < msPerHour) {
+        return Math.round(elapsed/msPerMinute) + ' minutes ago';
+      }
+
+      else if (elapsed < msPerDay ) {
+        clearInterval(this.interval);
+        return Math.round(elapsed/msPerHour ) + ' hours ago';
+      }
+
+      else if (elapsed < msPerMonth) {
+        clearInterval(this.interval);
+        return Math.round(elapsed/msPerDay) + ' days ago';
+      }
+
+      else if (elapsed < msPerYear) {
+        clearInterval(this.interval);
+        return Math.round(elapsed/msPerMonth) + ' months ago';
+      }
+
+      else {
+        clearInterval(this.interval);
+        return Math.round(elapsed/msPerYear ) + ' years ago';
+      }
+    }
+  },
+  created() {
+    this.interval = setInterval(() => this.currentDate = Date.now(), 1);
+  }
 };
 </script>
 
