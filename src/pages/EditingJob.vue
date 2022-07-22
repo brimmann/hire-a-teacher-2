@@ -20,13 +20,7 @@
       :options="jobTypeList"
       label="Job type"
     />
-    <q-select
-      style="width: 62%"
-      outlined
-      v-model="bufferedJob.city"
-      :options="expLevelList"
-      label="City"
-    />
+    <places-autocomplete-input @selected="placeSelected" :model-init-value="bufferedJob.city"/>
     <q-input outlined v-model="date" mask="date" :rules="['date']" label="Expiry Date" class="q-pb-none">
       <template #append>
         <q-icon name="event" class="cursor-pointer">
@@ -61,10 +55,11 @@
 import {mapStores} from "pinia";
 import {useOrgStore} from "stores/org";
 import TagsManager from "components/dashboard/TagsManager";
+import PlacesAutocompleteInput from "components/dashboard/PlacesAutocompleteInput";
 
 export default {
   name: "EditingJob",
-  components: {TagsManager},
+  components: {PlacesAutocompleteInput, TagsManager},
   props: {
     jobId: {
       type: Number,
@@ -119,6 +114,9 @@ export default {
     onJobDiscardChanges() {
       this.orgStore.determiners.dashboardState = 'jobs-list';
     },
+    placeSelected(val) {
+      this.bufferedJob.city = val;
+    }
   },
   mounted() {
     this.bufferedJob = this.orgStore.jobs[this.jobId];

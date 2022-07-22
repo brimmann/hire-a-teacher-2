@@ -1,10 +1,12 @@
 <template>
-<h1>Teacher Search</h1>
+  <places-autocomplete-input/>
 </template>
 
 <script>
+import PlacesAutocompleteInput from "components/dashboard/PlacesAutocompleteInput";
 export default {
-  name: "TeacherSearch"
+  name: "TeacherSearch",
+  components: {PlacesAutocompleteInput}
 }
 </script>
 
