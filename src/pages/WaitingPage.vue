@@ -4,13 +4,13 @@
     color="primary"
     size="8em"
   />
-  <div class="text-body1 text-grey">Loading your resume, please wait...</div>
+  <div class="text-body1 text-grey"><slot></slot></div>
 </q-page>
 </template>
 
 <script>
 export default {
-  name: "WaitingResume"
+  name: "WaitingPage"
 }
 </script>
 

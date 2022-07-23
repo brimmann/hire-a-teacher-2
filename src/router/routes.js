@@ -33,6 +33,7 @@ const routes = [
   },
   {
     path: '/org',
+    redirect: '/org/dashboard',
     component: () => import('../layouts/OrgPanel'),
     children: [
       { path: 'dashboard', component: () => import('pages/DashboardPage'), name: 'dashboard' },

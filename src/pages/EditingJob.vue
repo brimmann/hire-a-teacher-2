@@ -61,7 +61,7 @@ export default {
   name: "EditingJob",
   components: {PlacesAutocompleteInput, TagsManager},
   props: {
-    jobId: {
+    jobIndex: {
       type: Number,
       required: true
     }
@@ -106,9 +106,10 @@ export default {
       day = day.length > 1 ? day : '0' + day;
       return year + '/' + month + '/' + day;
     },
-    onJobSaveChanges() {
+    async onJobSaveChanges() {
       this.bufferedJob.expire_date = this.date;
-      this.orgStore.jobs[this.jobId] = this.bufferedJob;
+      await this.orgStore.updateJob(this.bufferedJob, this.jobIndex);
+      this.orgStore.jobs[this.jobIndex] = this.bufferedJob;
       this.orgStore.determiners.dashboardState = 'jobs-list';
     },
     onJobDiscardChanges() {
@@ -119,7 +120,7 @@ export default {
     }
   },
   mounted() {
-    this.bufferedJob = this.orgStore.jobs[this.jobId];
+    this.bufferedJob = this.orgStore.jobs[this.jobIndex];
   }
 }
 </script>

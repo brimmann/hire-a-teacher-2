@@ -77,7 +77,20 @@ export const useUserStore = defineStore('user', {
       const response = await axios.post('http://127.0.0.1:8000/api/v1/login/', payload);
       this.token = response.data.key;
       this.userId = response.data.user;
+      this.userType = payload.type;
 
+      console.log('type', payload.type);
+
+      if (payload.type === 'teacher') {
+        await this.setTeacherDetails(response);
+      } else if (payload.type === 'org') {
+        console.log('org');
+        await this.setOrgDetails(response);
+      }
+
+      this.persistUser(response);
+    },
+    async setTeacherDetails(response) {
       const detailsRes = await axios.get('http://127.0.0.1:8000/api/v1/teacher/get_details', {
         headers: {
           Authorization: 'Token ' + response.data.key,
@@ -89,9 +102,23 @@ export const useUserStore = defineStore('user', {
         phone_number: detailsRes.data.phone_number,
         user: detailsRes.data.user_id,
       };
-      this.userType = payload.type;
+      console.log('user', this.userDetails);
+    },
 
-      this.persistUser();
+    async setOrgDetails(response) {
+      const detailsRes = await axios.get('http://127.0.0.1:8000/api/v1/org/get_details', {
+        headers: {
+          Authorization: 'Token ' + response.data.key,
+        },
+      });
+
+      this.userDetails = {
+        org_name: detailsRes.data.org_name,
+        mobile_number: detailsRes.data.mobile_number,
+        phone_number: detailsRes.data.phone_number,
+        address: detailsRes.data.address,
+        user: detailsRes.data.user_id,
+      };
     },
 
     persistUser() {

@@ -1,5 +1,5 @@
 <template>
-  <component :is="currentComponent"></component>
+  <component :is="currentComponent">Loading your resume, please wait...</component>
 </template>
 
 <script>
@@ -7,7 +7,7 @@ import { mapStores } from 'pinia/dist/pinia';
 import { useResumeStore } from 'stores/resume';
 import ResumePage from 'pages/ResumePage';
 import BuildingResume from 'pages/BuildingResume';
-import WaitingResume from "pages/WaitingResume";
+import WaitingResume from "pages/WaitingPage";
 
 export default {
   name: 'ResumeContainer',

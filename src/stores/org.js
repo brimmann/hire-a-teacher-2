@@ -1,23 +1,75 @@
 import { defineStore } from 'pinia';
+import axios from 'axios';
+import { useUserStore } from 'stores/user';
 
 export const useOrgStore = defineStore('org', {
   state: () => ({
     determiners: {
       dashboardState: 'jobs-list',
+      jobsLoading: false,
     },
-    jobs: [
-      {
-        title: 'Math Teacher',
-        apps_no: '8',
-        exp_level: 'Entry Level',
-        type: 'Full-time',
-        date_posted: '1658315023229',
-        city: 'Islamabad',
-        expire_date: '2022-07-28',
-        description:
-          'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab accusantium autem cum cupiditate deserunt est eum, fugit inventore iure minima minus mollitia nam non nulla omnis perspiciatis provident quae quidem quis reprehenderit sunt ut veniam voluptates? Porro, sunt, voluptates? Ad atque aut autem consequuntur, corporis deserunt distinctio doloremque dolores ducimus ea eos et ex fugit in itaque labore libero magni minima minus modi molestiae mollitia neque non nulla officiis pariatur quae quam, quia quibusdam quidem quo recusandae repellendus repudiandae sint sit vel vero! Ab adipisci at cupiditate delectus doloribus hic in minima, minus modi quasi qui sunt totam voluptate voluptatem.',
-        tags: ['MATH', 'SCHOOL', 'TEACHER', 'PART'],
-      },
-    ],
+    jobs: [],
   }),
+  actions: {
+    async createJob(payload) {
+      const dataBlock = {
+        ...payload,
+      };
+      dataBlock.tags = dataBlock.tags.toString();
+      const user = useUserStore();
+      try {
+        await axios.post('http://127.0.0.1:8000/api/v1/jobs/create', dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+      } catch (e) {
+        console.log('create-job-error', e.message);
+      }
+    },
+    async updateJob(payload, jobIndex) {
+      const dataBlock = {
+        ...payload,
+      };
+      dataBlock.tags = dataBlock.tags.toString();
+      const user = useUserStore();
+      try {
+        await axios.put(
+          'http://127.0.0.1:8000/api/v1/jobs/update/' + this.jobs[jobIndex].id,
+          dataBlock,
+          {
+            headers: {
+              Authorization: 'Token ' + user.token,
+            },
+          }
+        );
+      } catch (e) {
+        console.log('update-job-error', e.message);
+      }
+    },
+    async loadJobs(background = true) {
+      const user = useUserStore();
+      this.determiners.jobsLoading = !background;
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/', {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+      this.determiners.jobsLoading = false;
+      console.log('loaded jobs', response.data);
+      this.jobs = [];
+      response.data.forEach((item) => {
+        item.tags = item.tags.split(',');
+        this.jobs.push(item);
+      });
+    },
+    async deleteJob(jobIndex) {
+      const user = useUserStore();
+      await axios.delete('http://127.0.0.1:8000/api/v1/jobs/delete/' + this.jobs[jobIndex].id, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+    },
+  },
 });

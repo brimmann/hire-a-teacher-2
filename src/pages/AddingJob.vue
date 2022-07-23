@@ -64,7 +64,7 @@ export default {
     return {
       newJob: {
         title: '',
-        apps_no: '',
+        apps_no: 0,
         exp_level: '',
         type: '',
         date_posted: '',
@@ -100,10 +100,12 @@ export default {
       day = day.length > 1 ? day : '0' + day;
       return year + '/' + month + '/' + day;
     },
-    onJobSave() {
+    async onJobSave() {
       this.newJob.expire_date = this.date;
       this.newJob.date_posted = Date.now().toString();
+      await this.orgStore.createJob(this.newJob);
       this.orgStore.jobs.push(this.newJob);
+      await this.orgStore.loadJobs();
       this.orgStore.determiners.dashboardState = 'jobs-list';
     },
     onJobDiscard() {

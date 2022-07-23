@@ -8,7 +8,7 @@
     <q-separator />
 
     <q-card-actions>
-      <q-btn dense unelevated  no-caps icon="delete" label="Delete job" />
+      <q-btn dense unelevated  no-caps icon="delete" label="Delete job" @click="$emit('delete-job')"/>
       <q-btn dense unelevated  no-caps icon="edit" label="Edit job" @click="$emit('edit')"/>
       <q-toggle v-model="jobActive" label="Activate job" />
       <q-space />
@@ -56,7 +56,7 @@ export default {
       required: true,
     }
   },
-  emits: ['edit'],
+  emits: ['edit', 'delete-job'],
   data() {
     return {
       jobActive: false,
@@ -74,7 +74,6 @@ export default {
       const msPerDay = msPerHour * 24;
       const msPerMonth = msPerDay * 30;
       const msPerYear = msPerDay * 365;
-      console.log(current, previous);
 
       const elapsed = current - previous;
 
@@ -108,7 +107,7 @@ export default {
     }
   },
   created() {
-    this.interval = setInterval(() => this.currentDate = Date.now(), 1);
+    this.interval = setInterval(() => this.currentDate = Date.now(), 1000);
   }
 };
 </script>

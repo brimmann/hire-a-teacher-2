@@ -2,9 +2,7 @@
   <q-page padding class="row flex-center">
     <q-card flat bordered class="my-card" :class="{ 'q-pa-lg': $q.screen.sm }">
       <q-card-section>
-        <div class="text-body1 text-center">
-          Please enter your login information
-        </div>
+        <div class="text-body1 text-center">Please enter your login information</div>
       </q-card-section>
       <q-card-section>
         <q-form @submit.prevent.stop="login" class="column q-col-gutter-md">
@@ -57,7 +55,6 @@
               style="width: 100%"
               @click="login"
               :loading="loggingIn"
-
             >
               <template #loading>
                 <q-spinner-bars class="on-left" />
@@ -72,17 +69,17 @@
 </template>
 
 <script>
-import { mapStores } from "pinia";
-import { useUserStore } from "stores/user";
+import { mapStores } from 'pinia';
+import { useUserStore } from 'stores/user';
 
 export default {
-  name: "LoginForm",
+  name: 'LoginForm',
   data() {
     return {
-      loginMode: "teacher",
-      email: "",
-      password: "",
-      requiredRules: [(val) => !!val || "Field is required"],
+      loginMode: 'teacher',
+      email: '',
+      password: '',
+      requiredRules: [(val) => !!val || 'Field is required'],
       loggingIn: false,
     };
   },
@@ -99,9 +96,13 @@ export default {
           type: this.loginMode,
         });
         this.loggingIn = false;
-        await this.$router.push("/teacher");
+        if (this.loginMode === 'org') {
+          await this.$router.push('/org');
+        } else {
+          await this.$router.push('/teacher');
+        }
       } catch (e) {
-        this.loggingIn =false;
+        this.loggingIn = false;
       }
     },
   },

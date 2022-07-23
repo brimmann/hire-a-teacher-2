@@ -53,6 +53,7 @@ export default {
   watch: {
     model(newValue) {
       this.$emit('selected', newValue);
+      this.stringOptions = [];
     }
   },
   methods: {
@@ -72,9 +73,6 @@ export default {
           that.loading = false;
         });
       }, 1000);
-      abort(() => {
-        console.log('aborted');
-      });
     },
     async setStringOptions() {
       if (this.inputValue === '') {
@@ -107,7 +105,6 @@ export default {
       temp = temp.filter(function( element ) {
         return element !== undefined;
       });
-      console.log('theTHTH:', temp);
       this.stringOptions = temp;
     },
   },
