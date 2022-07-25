@@ -65,7 +65,7 @@ export const useOrgStore = defineStore('org', {
     },
     async deleteJob(jobIndex) {
       const user = useUserStore();
-      await axios.delete('http://127.0.0.1:8000/api/v1/jobs/delete/' + this.jobs[jobIndex].id, {
+      await axios.delete('http://127.0.0.1:8000/api/v1/s/delete/' + this.jobs[jobIndex].id, {
         headers: {
           Authorization: 'Token ' + user.token,
         },

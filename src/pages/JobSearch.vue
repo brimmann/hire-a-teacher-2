@@ -1,10 +1,14 @@
 <template>
-<h1>job search</h1>
+  <q-page>
+    <relevant-jobs/>
+  </q-page>
 </template>
 
 <script>
+import RelevantJobs from "components/job-search/RelevantJobs";
 export default {
-  name: "JobSearch"
+  name: "JobSearch",
+  components: {RelevantJobs},
 }
 </script>
 
