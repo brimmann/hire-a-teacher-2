@@ -5,13 +5,13 @@
       <q-icon name="check" size="4em" color="grey"/>
       <div class="text-h4 text-grey">No trending jobs</div>
     </div>
-    <div style="width: 80%" class="column q-gutter-y-lg" v-if="orgStore.determiners.dashboardState === 'jobs-list'">
+    <div style="width: 70%" class="column q-gutter-y-lg" v-if="orgStore.determiners.dashboardState === 'jobs-list'">
       <job-item v-for="(job, index) in orgStore.jobs" :key="index" :job="job" @delete-job="deleteJob(index)" @edit="editingJob(index)"/>
     </div>
-    <div style="width: 80%;" v-else-if="orgStore.determiners.dashboardState === 'adding'" class="max-width">
+    <div style="width: 70%;" v-else-if="orgStore.determiners.dashboardState === 'adding'" class="max-width">
       <adding-job/>
     </div>
-    <div style="width: 80%;" v-else-if="orgStore.determiners.dashboardState === 'editing'" class="max-width">
+    <div style="width: 70%;" v-else-if="orgStore.determiners.dashboardState === 'editing'" class="max-width">
       <editing-job :job-index="editingJobIndex"/>
     </div>
   </q-page>

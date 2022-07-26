@@ -19,20 +19,45 @@
           <q-toolbar-title>{{ headerTitle.text }}</q-toolbar-title>
         </template>
 
-        <q-input
-          outlined
-          square
-          v-model="text"
-          dense
-          class="bg-white absolute-center"
-          style="width: 60%; min-width: 200px"
-          placeholder="Search i.e math, Lahore"
+        <div
           v-if="$route.name === 'search'"
+          class="absolute-center row flex-center"
+          style="width: 60%; min-width: 200px"
         >
-          <template #append>
-            <q-btn flat round color="primary" icon="search" />
-          </template>
-        </q-input>
+          <q-input
+            outlined
+            square
+            v-model="searchString"
+            dense
+            class="bg-white"
+            placeholder="Search i.e math, Lahore"
+            style="flex-grow: 1"
+            :loading="loading"
+          >
+            <template #append>
+              <q-btn
+                flat
+                color="primary"
+                icon="search"
+                v-if="$q.screen.width < 575"
+                v-show="!loading"
+                @click="searchJob"
+              />
+              <q-icon color="primary" name="search" v-show="!loading" v-else/>
+            </template>
+          </q-input>
+          <q-btn
+            color="brown-7"
+            no-caps
+            text-color="white"
+            unelevated
+            class="q-ml-sm"
+            label="Search"
+            style="height: 40px"
+            v-if="$q.screen.width > 575"
+            @click="searchJob"
+          />
+        </div>
         <q-space />
         <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
         <q-btn
@@ -80,7 +105,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       :width="this.$q.screen.xs ? 250 : 300"
-      :breakpoint="675"
+      :breakpoint="1024"
     >
       <q-scroll-area
         style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd"
@@ -143,7 +168,7 @@
       </q-img>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container id="page-container">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -153,16 +178,19 @@
 import { mapStores } from 'pinia/dist/pinia';
 import { useResumeStore } from 'stores/resume';
 import { useUserStore } from 'stores/user';
+import { useTeacherStore } from 'stores/teacher';
 
 export default {
   name: 'TeacherPanel',
   data() {
     return {
       leftDrawerOpen: false,
+      searchString: '',
+      loading: false,
     };
   },
   computed: {
-    ...mapStores(useResumeStore, useUserStore),
+    ...mapStores(useResumeStore, useUserStore, useTeacherStore),
     avatar() {
       const fullName = this.userStore.userDetails.full_name;
       const index = fullName.indexOf(' ');
@@ -191,6 +219,25 @@ export default {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     },
+    async searchJob() {
+      if (this.searchString === '') {
+        return;
+      }
+      try {
+        this.loading = true;
+        await this.teacherStore.searchJobs(this.searchString.replace('teacher', '').trim());
+        this.loading = false;
+        this.teacherStore.jobSearchStatus = 'search';
+      } catch (e) {
+        this.loading = false;
+      }
+    },
   },
 };
 </script>
+
+<style>
+.max-width {
+  max-width: 800px;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <q-card square flat bordered class="my-card">
     <q-card-section class="bg-teal text-white">
-      <div class="text-h6">{{ job.title }}</div>
+      <div class="text-h6" :class="{'text-custom': $q.screen.width < 500}">{{ job.title }}</div>
       <div class="text-subtitle1 text-teal-3 cursor-pointer non-selectable">{{ job.apps_no }} applications</div>
     </q-card-section>
 
@@ -106,5 +106,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.text-custom {
+  font-size: 1.1rem;
+}
+</style>
 

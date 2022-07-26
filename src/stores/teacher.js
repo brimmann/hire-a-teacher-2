@@ -4,24 +4,10 @@ import { useUserStore } from 'stores/user';
 
 export const useTeacherStore = defineStore('teacher', {
   state: () => ({
+    jobSearchStatus: 'rel',
     relevantJobs: [],
-    // relevantJobs: [
-    //   {
-    //     id: 29,
-    //     title: 'English Teacher (Primary / Secondary)',
-    //     apps_no: 0,
-    //     org_id: 35,
-    //     status: 'active',
-    //     exp_level: 'Entry',
-    //     type: 'Full-time',
-    //     city: 'Lahore',
-    //     date_posted: '1658650818217',
-    //     expire_date: '2022/07/26',
-    //     description:
-    //       'Unique Group of Institutions is hiring for English Teachers the Candidates must have Qualification in the related subject (English) such as BS English or MA English.\n\nMust know about the Syllabus of PTB classes, Grammar Rules, and Use of Board.\n\nMultiple vacancies are available from class 1-5, 6-8, and Matric Level.',
-    //     tags: ['ENGLISH', 'CLASSROOM', 'MANAGMENT', 'TEACHING'],
-    //   },
-    // ],
+    searchJobResult: [],
+    searchResultOrig: [],
   }),
   actions: {
     async getRelevantJobs() {
@@ -33,6 +19,77 @@ export const useTeacherStore = defineStore('teacher', {
       });
 
       this.relevantJobs = response.data.relevant_jobs;
+    },
+
+    async searchJobs(payload) {
+      const user = useUserStore();
+      const searchString = payload.replace(' ', '+');
+      const response = await axios.get(
+        'http://127.0.0.1:8000/api/v1/jobs/search?search_string=' + searchString,
+        {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        }
+      );
+
+      this.searchJobResult = response.data.matched_jobs;
+      this.searchResultOrig = JSON.parse(JSON.stringify(this.searchJobResult));
+    },
+
+    filterJobs(payload) {
+      const currentFilters = JSON.parse(JSON.stringify(payload));
+      Object.keys(currentFilters).forEach(
+        (k) => currentFilters[k] == null && delete currentFilters[k]
+      );
+      const noFilter = Object.keys(currentFilters).length === 0;
+      this.searchJobResult = JSON.parse(JSON.stringify(this.searchResultOrig));
+      if (noFilter) {
+        return;
+      }
+
+      this.filterByDatePosted(currentFilters.datePosted);
+      this.filterByExpLevel(currentFilters.expLevel);
+      this.filterByJobType(currentFilters.jobType);
+    },
+
+    filterByDatePosted(timeIndex) {
+      if (this.searchJobResult.length < 1 || timeIndex === undefined) {
+        return;
+      }
+
+      const currentFilterDateInt = new Date();
+      const daysToSubtract = [1, 3, 7, 14];
+      currentFilterDateInt.setDate(currentFilterDateInt.getDate() - daysToSubtract[timeIndex]);
+
+      const result = this.searchJobResult.filter((item) => {
+        const postDateInt = parseInt(item.date_posted);
+        return postDateInt >= currentFilterDateInt;
+      });
+
+      this.searchJobResult = result;
+    },
+
+    filterByJobType(jobType) {
+      if (this.searchJobResult.length < 1 || jobType === undefined) {
+        return;
+      }
+
+      const result = this.searchJobResult.filter((item) => {
+        return item.type === jobType;
+      });
+      this.searchJobResult = result;
+    },
+
+    filterByExpLevel(expLevel) {
+      if (this.searchJobResult.length < 1 || expLevel === undefined) {
+        return;
+      }
+
+      const result = this.searchJobResult.filter((item) => {
+        return item.exp_level === expLevel;
+      });
+      this.searchJobResult = result;
     },
   },
 });
