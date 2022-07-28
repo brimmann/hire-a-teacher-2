@@ -5,6 +5,12 @@ import { useUserStore } from 'stores/user';
 export const useTeacherStore = defineStore('teacher', {
   state: () => ({
     jobSearchStatus: 'rel',
+    applyingJob: {
+      job: null,
+      searchString: null,
+      filters: null,
+      previous: null,
+    },
     relevantJobs: [],
     searchJobResult: [],
     searchResultOrig: [],
@@ -90,6 +96,20 @@ export const useTeacherStore = defineStore('teacher', {
         return item.exp_level === expLevel;
       });
       this.searchJobResult = result;
+    },
+
+    async applyForJob(payload) {
+      const user = useUserStore();
+      const data = {
+        ...payload,
+        teacher: user.userId,
+      };
+
+      await axios.post('http://127.0.0.1:8000/api/v1/jobs/apply', data, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
     },
   },
 });

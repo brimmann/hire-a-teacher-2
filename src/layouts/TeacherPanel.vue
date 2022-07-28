@@ -223,11 +223,13 @@ export default {
       if (this.searchString === '') {
         return;
       }
+      this.teacherStore.applyingJob.searchString = this.searchString;
       try {
         this.loading = true;
         await this.teacherStore.searchJobs(this.searchString.replace('teacher', '').trim());
         this.loading = false;
         this.teacherStore.jobSearchStatus = 'search';
+        this.teacherStore.filterJobs(this.teacherStore.applyingJob.filters);
       } catch (e) {
         this.loading = false;
       }

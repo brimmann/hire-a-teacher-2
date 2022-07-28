@@ -114,10 +114,16 @@ export default {
   },
   watch: {
     filters: {
-      handler: function (val) {
+      handler: function () {
+        this.teacherStore.applyingJob.filters = this.filters;
         this.teacherStore.filterJobs(this.filters);
       },
-      deep: true
+      deep: true,
+    },
+  },
+  created() {
+    if (this.teacherStore.applyingJob.filters !== null) {
+      this.filters = this.teacherStore.applyingJob.filters;
     }
   },
 };

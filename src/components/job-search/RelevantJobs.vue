@@ -1,8 +1,15 @@
 <template>
   <q-page padding class="column items-center">
-    <div :style="{ width: $q.screen.width < 680 ? '95%' : '80%' }" class="column q-gutter-y-lg max-width">
+    <div
+      :style="{ width: $q.screen.width < 680 ? '95%' : '80%' }"
+      class="column q-gutter-y-lg max-width"
+    >
       <div class="self-start text-subtitle1 text-grey-8">Jobs best match your resume</div>
-      <s-job-item v-for="(job, index) in teacherStore.relevantJobs" :job="job" :key="index" />
+      <s-job-item
+        v-for="(job, index) in teacherStore.relevantJobs"
+        :job="job"
+        :key="index"
+      />
     </div>
   </q-page>
 </template>
@@ -23,5 +30,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

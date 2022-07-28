@@ -4,7 +4,6 @@
       <div class="text-h6" :class="{'text-custom': $q.screen.width < 500}">{{ job.title }}</div>
       <div class="text-subtitle1 text-teal-3 cursor-pointer non-selectable">{{ job.apps_no }} applications</div>
     </q-card-section>
-
     <q-separator />
     <q-card-section class="q-mb-none">
       <div class="text-caption q-mb-sm">{{ job.exp_level }} - {{ job.type }} - Posted {{ postTime }}</div>
@@ -13,7 +12,7 @@
     </q-card-section>
     <q-separator inset/>
     <q-card-actions class="q-px-md">
-      <q-btn no-caps padding="sm lg" color="primary" label="Apply now" unelevated/>
+      <q-btn no-caps padding="sm lg" color="primary" label="Apply now" unelevated @click="applyForJob"/>
       <q-space />
       <q-btn
         :ripple="false"
@@ -42,6 +41,9 @@
 
 <script>
 
+import {mapStores} from "pinia";
+import {useTeacherStore} from "stores/teacher";
+
 export default {
   name: 'SJobItem',
   props: {
@@ -50,16 +52,15 @@ export default {
       required: true,
     }
   },
-  emits: ['edit', 'delete-job'],
   data() {
     return {
-      jobActive: false,
       expanded: false,
       currentDate: Date.now(),
       interval: null
     };
   },
   computed: {
+    ...mapStores(useTeacherStore),
     postTime() {
       const current = this.currentDate;
       const previous = new Date(parseInt(this.job.date_posted));
@@ -99,6 +100,15 @@ export default {
         return Math.round(elapsed/msPerYear ) + ' years ago';
       }
     }
+  },
+  methods: {
+    applyForJob(job) {
+      const store = this.teacherStore;
+
+      store.applyingJob.job = this.job;
+      store.applyingJob.previous = store.jobSearchStatus;
+      store.jobSearchStatus = 'applying';
+    },
   },
   created() {
     this.interval = setInterval(() => this.currentDate = Date.now(), 1000);

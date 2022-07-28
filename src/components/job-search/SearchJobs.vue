@@ -1,9 +1,5 @@
 <template>
   <q-page padding class="column items-center" v-if="teacherStore.searchResultOrig.length > 0">
-    <div v-if="false" class="self-start row items-center">
-      <q-btn icon="tune" flat color="green-5" size="1.4em" />
-      <div class="text-body1 text-grey-7">Use this icon to filter jobs</div>
-    </div>
     <the-filters/>
     <q-separator spaced class="full-width" />
     <div
