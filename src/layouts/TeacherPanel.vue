@@ -30,7 +30,7 @@
             v-model="searchString"
             dense
             class="bg-white"
-            placeholder="Search i.e math, Lahore"
+            placeholder="Search i.e math, english"
             style="flex-grow: 1"
             :loading="loading"
           >

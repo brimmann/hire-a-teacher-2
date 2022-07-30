@@ -2,7 +2,7 @@
   <q-card square flat bordered class="my-card">
     <q-card-section class="bg-teal text-white">
       <div class="text-h6" :class="{'text-custom': $q.screen.width < 500}">{{ job.title }}</div>
-      <div class="text-subtitle1 text-teal-3 cursor-pointer non-selectable">{{ job.apps_no }} applications</div>
+      <div class="text-subtitle1 text-teal-3 non-selectable">{{ job.apps_no }} applications</div>
     </q-card-section>
     <q-separator />
     <q-card-section class="q-mb-none">

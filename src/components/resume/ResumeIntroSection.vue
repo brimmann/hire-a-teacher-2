@@ -29,7 +29,7 @@
     <q-card-section class="row">
       <div class="text-h5" ref="test-ref">{{ resumeStore.intro.fullName }}</div>
       <q-space />
-      <q-btn flat round color="accent" icon="edit" @click="resumeStore.intro.editing = true" />
+      <q-btn flat v-if="!readOnly" round color="accent" icon="edit" @click="resumeStore.intro.editing = true" />
     </q-card-section>
     <q-card-section>
       <div class="text-subtitle1 q-mb-sm">{{ resumeStore.intro.headline }}</div>
@@ -47,6 +47,13 @@ import { useResumeStore } from 'stores/resume';
 
 export default {
   name: 'ResumeIntroSection',
+  props: {
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   data() {
     return {
       introBuffer: {

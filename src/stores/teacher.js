@@ -14,6 +14,7 @@ export const useTeacherStore = defineStore('teacher', {
     relevantJobs: [],
     searchJobResult: [],
     searchResultOrig: [],
+    applications: [],
   }),
   actions: {
     async getRelevantJobs() {
@@ -41,6 +42,16 @@ export const useTeacherStore = defineStore('teacher', {
 
       this.searchJobResult = response.data.matched_jobs;
       this.searchResultOrig = JSON.parse(JSON.stringify(this.searchJobResult));
+    },
+    async getApplications() {
+      const user = useUserStore();
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/apps', {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+
+      this.applications = response.data.applications;
     },
 
     filterJobs(payload) {
@@ -105,7 +116,18 @@ export const useTeacherStore = defineStore('teacher', {
         teacher: user.userId,
       };
 
+      console.log(data);
+
       await axios.post('http://127.0.0.1:8000/api/v1/jobs/apply', data, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+    },
+    async withdrawApplication(payload) {
+      const user = useUserStore();
+      console.log(payload);
+      await axios.delete('http://127.0.0.1:8000/api/v1/jobs/apps_withdraw/' + payload, {
         headers: {
           Authorization: 'Token ' + user.token,
         },

@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       jobActive: false,
-      expanded: false,
+      expanded: true,
       currentDate: Date.now(),
       interval: null
     };

@@ -1,24 +1,28 @@
 <template>
-  <relevant-jobs v-if="teacherStore.jobSearchStatus === 'rel'"/>
-  <search-jobs v-else-if="teacherStore.jobSearchStatus === 'search'"/>
-  <apply-for-job v-if="teacherStore.jobSearchStatus === 'applying'" :job="teacherStore.applyingJob.job" />
+  <relevant-jobs v-if="teacherStore.jobSearchStatus === 'rel'" />
+  <search-jobs v-else-if="teacherStore.jobSearchStatus === 'search'" />
+  <apply-for-job
+    v-if="teacherStore.jobSearchStatus === 'applying'"
+    :job="teacherStore.applyingJob.job"
+  />
 </template>
 
 <script>
-import RelevantJobs from "components/job-search/RelevantJobs";
-import {mapStores} from "pinia";
-import {useTeacherStore} from "stores/teacher";
-import SearchJobs from "components/job-search/SearchJobs";
-import ApplyForJob from "components/job-applications/ApplyForJob";
+import RelevantJobs from 'components/job-search/RelevantJobs';
+import { mapStores } from 'pinia';
+import { useTeacherStore } from 'stores/teacher';
+import SearchJobs from 'components/job-search/SearchJobs';
+import ApplyForJob from 'components/job-applications/ApplyForJob';
 export default {
-  name: "JobSearch",
-  components: {ApplyForJob, SearchJobs, RelevantJobs},
+  name: 'JobSearch',
+  components: { ApplyForJob, SearchJobs, RelevantJobs },
   computed: {
-    ...mapStores(useTeacherStore)
-  }
-}
+    ...mapStores(useTeacherStore),
+  },
+  mounted() {
+    this.teacherStore.jobSearchStatus = 'rel';
+  },
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

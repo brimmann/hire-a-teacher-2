@@ -9,6 +9,9 @@ export const useOrgStore = defineStore('org', {
       jobsLoading: false,
     },
     jobs: [],
+    applications: [],
+    jobBasedApplication: {},
+    viewingJob: null,
   }),
   actions: {
     async createJob(payload) {
@@ -70,6 +73,24 @@ export const useOrgStore = defineStore('org', {
           Authorization: 'Token ' + user.token,
         },
       });
+    },
+    async getOrgApplications() {
+      const user = useUserStore();
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/apps', {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+      this.applications = response.data.applications;
+    },
+    async getOrgApplicationsJobBased(job_id) {
+      const user = useUserStore();
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/apps?job_id=' + job_id, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+      this.jobBasedApplication = response.data;
     },
   },
 });

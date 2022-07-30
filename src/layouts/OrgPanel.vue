@@ -32,6 +32,43 @@
             <span v-if="subtitle" class="text-grey-5"> | {{ subtitle }}</span>
           </q-toolbar-title>
         </template>
+        <div
+          v-if="$route.name === 't-search'"
+          class="absolute-center row flex-center"
+          style="width: 60%; min-width: 200px"
+        >
+          <q-input
+            outlined
+            square
+            dense
+            class="bg-white"
+            placeholder="Search i.e math, english"
+            style="flex-grow: 1"
+          >
+            <template #append>
+              <q-btn
+                flat
+                color="primary"
+                icon="search"
+                v-if="$q.screen.width < 575"
+                v-show="!loading"
+                @click="searchJob"
+              />
+              <q-icon color="primary" name="search" v-show="!loading" v-else/>
+            </template>
+          </q-input>
+          <q-btn
+            color="brown-7"
+            no-caps
+            text-color="white"
+            unelevated
+            class="q-ml-sm"
+            label="Search"
+            style="height: 40px"
+            v-if="$q.screen.width > 575"
+            @click="searchJob"
+          />
+        </div>
         <q-space />
         <template
           v-if="$route.name === 'dashboard' && orgStore.determiners.dashboardState === 'jobs-list'"
@@ -52,7 +89,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       :width="this.$q.screen.xs ? 250 : 300"
-      :breakpoint="675"
+      :breakpoint="1045"
     >
       <q-scroll-area
         style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd"

@@ -8,8 +8,8 @@
             <span class="text-body2 text-grey-8">- {{ lang.level_of_fluency }}</span>
           </div>
           <q-space />
-          <q-btn flat size="md" color="primary" icon="edit" @click="onEditLang(index)" />
-          <q-btn flat size="md" color="primary" icon="delete" @click="onDeleteLang(index)" />
+          <q-btn v-if="!readOnly" flat size="md" color="primary" icon="edit" @click="onEditLang(index)" />
+          <q-btn v-if="!readOnly" flat size="md" color="primary" icon="delete" @click="onDeleteLang(index)" />
         </q-card-section>
         <q-separator inset />
       </div>
@@ -55,6 +55,13 @@ import { useResumeStore } from 'stores/resume';
 
 export default {
   name: 'ResumeLangSection',
+  props: {
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   data() {
     return {
       langLevelList: ['Beginner', 'Intermediate', 'Fluent', 'Expert', 'Native'],

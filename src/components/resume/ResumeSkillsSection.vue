@@ -9,6 +9,7 @@
             v-model="resumeStore.skills[index].skill"
             :validate="(val) => val.length > 5"
             v-slot="scope"
+            v-if="!readOnly"
           >
             <q-input
               autofocus
@@ -35,7 +36,7 @@
           </q-popup-edit>
         </div>
         <q-space />
-        <q-btn @click="onDeleteSkill(index)" flat size="md" color="primary" icon="delete" />
+        <q-btn v-if="!readOnly" @click="onDeleteSkill(index)" flat size="md" color="primary" icon="delete" />
       </q-card-section>
       <q-separator inset />
     </div>
@@ -48,6 +49,13 @@ import { useResumeStore } from 'stores/resume';
 
 export default {
   name: 'ResumeSkillsSection',
+  props: {
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   computed: {
     ...mapStores(useResumeStore),
   },

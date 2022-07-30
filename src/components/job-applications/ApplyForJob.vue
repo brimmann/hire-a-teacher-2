@@ -7,7 +7,7 @@
           <div class="text-h6" :class="{ 'text-custom': $q.screen.width < 500 }">
             {{ job.title }}
           </div>
-          <div class="text-subtitle1 text-teal-3 cursor-pointer non-selectable">
+          <div class="text-subtitle1 text-teal-3 non-selectable">
             {{ job.apps_no }} applications
           </div>
         </q-card-section>
@@ -114,6 +114,11 @@ export default {
       const store = this.teacherStore;
 
       await store.getRelevantJobs();
+      await store.applyForJob({
+        date_applied: new Date().getTime().toString(),
+        job: this.job.id,
+      });
+
       if (store.applyingJob.searchString !== null) {
         await store.searchJobs(store.applyingJob.searchString);
       }
@@ -121,11 +126,6 @@ export default {
       if (store.applyingJob.filters !== null) {
         store.filterJobs(store.applyingJob.filters);
       }
-
-      await store.applyForJob({
-        date_applied: new Date().getTime().toString(),
-        job: this.job.id,
-      });
 
       store.jobSearchStatus = store.applyingJob.previous;
       this.applying = false;

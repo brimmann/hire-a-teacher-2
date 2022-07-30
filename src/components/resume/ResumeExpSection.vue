@@ -5,8 +5,8 @@
         <q-card-section class="row q-pt-sm items-center q-pb-xs">
           <div class="text-subtitle1 text-bold">{{ exp.title }}</div>
           <q-space />
-          <q-btn flat size="md" color="primary" icon="edit" @click="onExpEdit(index)" />
-          <q-btn flat size="md" color="primary" icon="delete" @click="onDeleteExp(index)" />
+          <q-btn flat size="md" v-if="!readOnly" color="primary" icon="edit" @click="onExpEdit(index)" />
+          <q-btn flat size="md" v-if="!readOnly" color="primary" icon="delete" @click="onDeleteExp(index)" />
         </q-card-section>
         <q-separator inset />
         <q-card-section class="q-pt-xs">
@@ -105,6 +105,13 @@ import { useResumeStore } from 'stores/resume';
 
 export default {
   name: 'ResumeExpSection',
+  props: {
+    readOnly: {
+      type: Boolean,
+      required: false,
+      default: false
+    }
+  },
   data() {
     return {
       yearsList: [
