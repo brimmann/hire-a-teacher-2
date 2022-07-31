@@ -135,12 +135,12 @@
             <q-item-section> Job Applications </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/teacher/offers" exact>
+          <q-item clickable v-ripple to="/teacher/interviews" exact>
             <q-item-section avatar>
-              <q-icon name="drafts" />
+              <q-icon name="live_help" />
             </q-item-section>
 
-            <q-item-section> Job Offers </q-item-section>
+            <q-item-section> Interviews </q-item-section>
           </q-item>
           <q-item clickable v-ripple>
             <q-item-section avatar>
@@ -208,8 +208,8 @@ export default {
           return { text: 'Resume', icon: 'contact_page' };
         case 'app':
           return { text: 'Job applications', icon: 'work' };
-        case 'offers':
-          return { text: 'Job offers', icon: 'drafts' };
+        case 'interviews':
+          return { text: 'Interviews', icon: 'drafts' };
         default:
           return null;
       }

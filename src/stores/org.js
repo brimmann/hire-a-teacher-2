@@ -11,7 +11,30 @@ export const useOrgStore = defineStore('org', {
     jobs: [],
     applications: [],
     jobBasedApplication: {},
+    searchedTeachers: [],
     viewingJob: null,
+    offeringJob: {
+      id: 30,
+      title: 'Web Trainer',
+      org: 35,
+      status: 'active',
+      exp_level: 'Senior',
+      type: 'Part-time',
+      city: 'Islamabad',
+      date_posted: '1658694127426',
+      expire_date: '2022/07/28',
+      description:
+        'A test job. As you can see, there is some improvement when using tf–idf instead of just word\r\ncounts. We can also inspect which words tf–idf found most important. Keep in mind\r\nthat the tf–idf scaling is meant to find words that distinguish documents, but it is a\r\npurely unsupervised technique. So, “important” here does not necessarily relate to the\r\n“positive review” and “negative review” labels we are interested in. First, we extract\r\nthe TfidfVectorizer from the pipeline. As you can see, there is some improvement when using tf–idf instead of just word\r\ncounts. We can also inspect which words tf–idf found most important. Keep in mind\r\nthat the tf–idf scaling is meant to find words that distinguish documents, but it is a\r\npurely unsupervised technique. So, “important” here does not necessarily relate to the\r\n“positive review” and “negative review” labels we are interested in. First, we extract\r\nthe TfidfVectorizer from the pipeline:',
+      tags: 'TEST',
+      apps_no: 4,
+    },
+    offeringTeacher: {
+      teacher_id: 2,
+      full_name: 'Mohammad Rashid',
+      headline: 'Web Development',
+      brief:
+        'My core skills are Django, Vue JS, OOP, Data Structure and Algorithm. Through my learning journey I have developed and designed different practice web applications and websites, mobile applications and desktop applications. I have used different technologies and programming languages including Django, Vue, Java Swing, Android SDK, Python, JavaScript, Java, Kotlin and C++.\n\nSome of the projects I worked and link to my Github account are mentioned bellow.',
+    },
   }),
   actions: {
     async createJob(payload) {
@@ -91,6 +114,19 @@ export const useOrgStore = defineStore('org', {
         },
       });
       this.jobBasedApplication = response.data;
+    },
+    async searchTeachers(payload) {
+      const user = useUserStore();
+      const searchString = payload.replace(' ', '+');
+      const response = await axios.get(
+        'http://127.0.0.1:8000/api/v1/jobs/search/teachers?search_string=' + searchString,
+        {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        }
+      );
+      this.searchedTeachers = response.data.matched_teachers;
     },
   },
 });

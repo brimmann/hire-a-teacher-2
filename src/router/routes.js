@@ -28,7 +28,11 @@ const routes = [
         component: () => import('pages/JobApplications'),
         name: 'app',
       },
-      { path: 'offers', component: () => import('pages/JobOffers'), name: 'offers' },
+      {
+        path: 'interviews',
+        component: () => import('pages/TeacherInterviews'),
+        name: 'interviews',
+      },
     ],
   },
   {
@@ -46,6 +50,10 @@ const routes = [
         path: 'applications',
         component: () => import('pages/JobApplicationsOrg'),
         name: 'o-app',
+      },
+      {
+        path: 'interviews',
+        component: () => import('pages/OrgInterviews'),
       },
     ],
   },

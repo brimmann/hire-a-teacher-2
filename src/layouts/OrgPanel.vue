@@ -10,28 +10,6 @@
           @click="toggleLeftDrawer"
           v-if="$q.platform.is.mobile || !leftDrawerOpen"
         />
-
-        <q-input
-          outlined
-          square
-          v-model="text"
-          dense
-          class="bg-white absolute-center"
-          style="width: 60%; min-width: 200px"
-          placeholder="Search i.e math, Lahore"
-          v-if="$route.name === 'search'"
-        >
-          <template #append>
-            <q-btn flat round color="primary" icon="search" />
-          </template>
-        </q-input>
-        <template v-if="$q.screen.width > 675 && headerTitle">
-          <q-icon :name="headerTitle.icon" size="1.5rem" />
-          <q-toolbar-title>
-            {{ headerTitle.text }}
-            <span v-if="subtitle" class="text-grey-5"> | {{ subtitle }}</span>
-          </q-toolbar-title>
-        </template>
         <div
           v-if="$route.name === 't-search'"
           class="absolute-center row flex-center"
@@ -40,10 +18,12 @@
           <q-input
             outlined
             square
+            v-model="searchString"
             dense
             class="bg-white"
             placeholder="Search i.e math, english"
             style="flex-grow: 1"
+            :loading="loading"
           >
             <template #append>
               <q-btn
@@ -52,7 +32,7 @@
                 icon="search"
                 v-if="$q.screen.width < 575"
                 v-show="!loading"
-                @click="searchJob"
+                @click="onSearchTeacher"
               />
               <q-icon color="primary" name="search" v-show="!loading" v-else/>
             </template>
@@ -66,7 +46,7 @@
             label="Search"
             style="height: 40px"
             v-if="$q.screen.width > 575"
-            @click="searchJob"
+            @click="onSearchTeacher"
           />
         </div>
         <q-space />
@@ -118,7 +98,13 @@
 
             <q-item-section> Applications </q-item-section>
           </q-item>
+          <q-item clickable v-ripple to="/org/interviews" exact>
+            <q-item-section avatar>
+              <q-icon name="live_help" />
+            </q-item-section>
 
+            <q-item-section>Interviews</q-item-section>
+          </q-item>
           <q-item clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="logout" />
@@ -157,6 +143,8 @@ export default {
   data() {
     return {
       leftDrawerOpen: false,
+      searchString: '',
+      loading: false,
     };
   },
   computed: {
@@ -164,7 +152,7 @@ export default {
     subtitle() {
       if (this.orgStore.determiners.dashboardState === 'adding') {
         return 'Adding a new job';
-      } else if(this.orgStore.determiners.dashboardState === 'editing') {
+      } else if (this.orgStore.determiners.dashboardState === 'editing') {
         return 'Editing job';
       } else {
         return null;
@@ -189,6 +177,18 @@ export default {
   methods: {
     toggleLeftDrawer() {
       this.leftDrawerOpen = !this.leftDrawerOpen;
+    },
+    async onSearchTeacher() {
+      if (this.searchString === "") {
+        return;
+      }
+      try {
+        this.loading = true;
+        await this.orgStore.searchTeachers(this.searchString);
+        this.loading = false;
+      } catch (e) {
+        this.loading = false;
+      }
     },
   },
 };
