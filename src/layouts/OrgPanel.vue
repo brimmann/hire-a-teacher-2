@@ -2,6 +2,10 @@
   <q-layout view="lHh LpR lFf">
     <q-header class="bg-primary text-white">
       <q-toolbar>
+        <template v-if="$q.screen.width > 675 && headerTitle">
+          <q-icon :name="headerTitle.icon" size="1.5rem" />
+          <q-toolbar-title>{{ headerTitle.text }}</q-toolbar-title>
+        </template>
         <q-btn
           dense
           flat
@@ -169,6 +173,8 @@ export default {
           return null;
         case 'o-app':
           return { text: 'Applications', icon: 'drafts' };
+        case 'o-interviews':
+          return { text: 'Interviews', icon: 'live_help'}
         default:
           return null;
       }

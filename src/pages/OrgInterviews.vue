@@ -49,7 +49,7 @@ export default {
   components: { ResumePublicView, InterviewItemOrg },
   data() {
     return {
-      status: 'resume',
+      status: 'main',
     };
   },
   computed: {

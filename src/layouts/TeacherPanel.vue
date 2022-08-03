@@ -202,7 +202,7 @@ export default {
     },
     headerTitle() {
       switch (this.$route.name) {
-        case 'search':
+        case 't-search':
           return null;
         case 'resume':
           return { text: 'Resume', icon: 'contact_page' };

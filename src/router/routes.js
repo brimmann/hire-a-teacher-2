@@ -54,6 +54,7 @@ const routes = [
       {
         path: 'interviews',
         component: () => import('pages/OrgInterviews'),
+        name: 'o-interviews',
       },
     ],
   },
