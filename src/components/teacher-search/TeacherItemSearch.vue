@@ -38,7 +38,7 @@
 <script>
 export default {
   name: 'TeacherItemSearch',
-  emits: ['resume'],
+  emits: ['resume', 'send-offer'],
   props: {
     teacher: {
       type: Object,
