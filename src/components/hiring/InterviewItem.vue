@@ -11,16 +11,15 @@
     <q-separator inset/>
     <q-card-section>
       <q-chip square outline icon="location_on" class="q-ma-none q-mb-sm text-caption" :ripple="false" label="Office address"/>
-      <div class="text-body2">DIgital Code Office 203 Plaza 57 J&amp;K Arcade Civic Center Phase 4 Bahria Town Islamabad</div>
+      <div class="text-body2">{{ interview.address }}</div>
       <q-chip square outline icon="calendar_month" class="q-ma-none q-mb-sm q-mt-md text-caption" :ripple="false" label="Interview date"/>
       <div class="text-body2">
-        <div>Tuesday, June 14, 2022</div>
-        <dvi>3:00 pm - 3:45 pm GMT+5</dvi>
+        <div>{{ interview.time }}</div>
       </div>
     </q-card-section>
     <q-separator inset/>
     <q-card-actions class="q-px-md">
-      <q-btn no-caps outline padding="sm lg" label="Cancel interview" unelevated @click="applyForJob"/>
+      <q-btn no-caps outline padding="sm lg" label="Cancel interview" unelevated @click="cancelInterview"/>
       <q-space />
       <q-btn
         :ripple="false"
@@ -48,17 +47,43 @@
 </template>
 
 <script>
+import {format} from "date-fns";
+import {mapStores} from "pinia";
+import {useTeacherStore} from "stores/teacher";
+
 export default {
   name: "InterviewItem",
   props: {
     job: {
       type: Object,
       required: true,
+    },
+    interview: {
+      type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
+      required: true
     }
   },
   data() {
     return {
       expanded: false,
+    }
+  },
+  computed: {
+    ...mapStores(useTeacherStore)
+  },
+  methods: {
+    async cancelInterview() {
+      console.log(this.index, "the index");
+      try {
+        await this.teacherStore.cancelInterview(this.interview.id);
+        this.teacherStore.interviews.splice(this.index, 1);
+      } catch (e) {
+        console.log("interview-delete-error", e.message);
+      }
     }
   }
 }

@@ -30,7 +30,11 @@ export default {
   methods: {
     reviewResume(app) {
       this.orgStore.viewingJob = this.orgStore.jobBasedApplication.job;
-      this.$emit('resume', app.teacher)
+      const data = {
+        app: app,
+        job: this.orgStore.viewingJob
+      }
+      this.$emit('resume', data)
     }
   }
 }

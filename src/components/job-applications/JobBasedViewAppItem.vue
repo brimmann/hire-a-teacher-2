@@ -11,7 +11,7 @@
         no-caps
         icon-right="keyboard_double_arrow_right"
         label="Review teacher resume"
-        @click="$emit('resume')"
+        @click="$emit('resume', application)"
       />
     </q-card-section>
   </q-card>

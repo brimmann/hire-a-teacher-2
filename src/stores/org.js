@@ -12,6 +12,7 @@ export const useOrgStore = defineStore('org', {
     applications: [],
     jobBasedApplication: {},
     searchedTeachers: [],
+    interviews: [],
     viewingJob: null,
     offeringJob: {
       id: 30,
@@ -127,6 +128,33 @@ export const useOrgStore = defineStore('org', {
         }
       );
       this.searchedTeachers = response.data.matched_teachers;
+    },
+    async accept(payload) {
+      const dataBlock = {
+        ...payload,
+      };
+      console.log('dataBlock', dataBlock);
+      const user = useUserStore();
+      try {
+        await axios.post('http://127.0.0.1:8000/api/v1/jobs/accept', dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
+        // await this.getOrgApplications();
+      } catch (e) {
+        console.log('accept-error', e.message);
+      }
+    },
+    async getInterviews() {
+      const user = useUserStore();
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/interviews', {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+
+      this.interviews = response.data.interviews;
     },
   },
 });

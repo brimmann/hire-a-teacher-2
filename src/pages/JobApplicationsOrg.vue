@@ -154,7 +154,8 @@ export default {
       accept: false,
       step: 1,
       date: '2022-08-01 12:44 PM',
-      address: ""
+      address: "",
+      viewIngApplication: null
     };
   },
   computed: {
@@ -162,8 +163,9 @@ export default {
 
   },
   methods: {
-    viewResume(resumeId) {
-      this.viewingResumeId = resumeId;
+    viewResume(app) {
+      this.viewingResumeId = app.app.teacher;
+      this.viewIngApplication = app
       this.previousStatus = this.status;
       this.status = 'resume';
     },
@@ -171,7 +173,14 @@ export default {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
-    finish(){
+    async finish(){
+      const payload = {
+        time: this.date,
+        address: this.address,
+        job: this.viewIngApplication.app.job,
+        teacher: this.viewIngApplication.app.teacher
+      }
+      await this.orgStore.accept(payload)
       this.accept = false;
       this.status = this.previousStatus;
     }

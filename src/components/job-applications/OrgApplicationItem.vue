@@ -88,6 +88,9 @@ export default {
       this.orgStore.viewingJob = this.appData.job;
       this.$emit('resume');
     }
+  },
+  mounted() {
+    console.log(JSON.parse(JSON.stringify(this.appData)));
   }
 };
 </script>

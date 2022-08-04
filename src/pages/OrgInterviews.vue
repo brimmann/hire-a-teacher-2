@@ -1,12 +1,19 @@
 <template>
-  <q-page padding class="column flex-center" v-if="status === 'main'">
-    <div style="width: 80%; max-width: 800px">
+  <q-page padding class="column items-center" v-if="status === 'main'">
+    <div
+      class="text-subtitle1 text-grey-8 text-center"
+      v-if="orgStore.interviews.length < 1"
+    >
+      <span class="text-bold">No interviews</span>
+    </div>
+    <div style="width: 80%; max-width: 800px" v-else>
       <interview-item-org
         class="q-mb-lg"
-        :job="orgStore.offeringJob"
-        v-for="i in 2"
-        :key="i"
-        @view-resume="status = 'resume'"
+        v-for="(interview, index) in orgStore.interviews"
+        :job="interview.job"
+        :interview="interview.interview"
+        :key="index"
+        @view-resume="viewResume"
       />
     </div>
   </q-page>
@@ -21,9 +28,9 @@
         @click="status = 'main'"
       />
       <q-space />
-      <div class="text-subtitle1 text-grey-7">Interview scheduled Tuesday, June 14, 2022 3:00 pm </div>
+      <div class="text-body1 text-grey-7">Interview scheduled {{ viewingInterview.time }}</div>
     </div>
-    <resume-public-view :resume-id="2" />
+    <resume-public-view :resume-id="viewingInterview.teacher" />
     <q-page-sticky @click="scrollToTop" position="bottom-right" :offset="[18, 18]">
       <q-btn
         fab
@@ -50,6 +57,7 @@ export default {
   data() {
     return {
       status: 'main',
+      viewingInterview: null
     };
   },
   computed: {
@@ -60,7 +68,14 @@ export default {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
-  }
+    viewResume(interview) {
+      this.viewingInterview = interview;
+      this.status = "resume";
+    }
+  },
+  created() {
+    this.orgStore.getInterviews();
+  },
 };
 </script>
 

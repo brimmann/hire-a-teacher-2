@@ -15,6 +15,7 @@ export const useTeacherStore = defineStore('teacher', {
     searchJobResult: [],
     searchResultOrig: [],
     applications: [],
+    interviews: [],
   }),
   actions: {
     async getRelevantJobs() {
@@ -132,6 +133,27 @@ export const useTeacherStore = defineStore('teacher', {
           Authorization: 'Token ' + user.token,
         },
       });
+    },
+    async getInterviews() {
+      const user = useUserStore();
+      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/interviews', {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+
+      this.interviews = response.data.interviews;
+    },
+    async cancelInterview(payload) {
+      const user = useUserStore();
+      const response = await axios.delete(
+        'http://127.0.0.1:8000/api/v1/jobs/interviews_delete?id=' + payload,
+        {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        }
+      );
     },
   },
 });
