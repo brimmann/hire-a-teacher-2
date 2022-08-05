@@ -109,6 +109,13 @@
 
             <q-item-section>Interviews</q-item-section>
           </q-item>
+          <q-item clickable v-ripple to="/org/tokens" exact>
+            <q-item-section avatar>
+              <q-icon name="backup_table" />
+            </q-item-section>
+
+            <q-item-section>Feedback tokens</q-item-section>
+          </q-item>
           <q-item clickable v-ripple>
             <q-item-section avatar>
               <q-icon name="logout" />

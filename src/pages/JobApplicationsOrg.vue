@@ -41,7 +41,7 @@
         <q-stepper v-model="step" vertical color="primary" animated>
           <q-step :name="1" title="You must know" icon="settings" :done="step > 1">
             <div class="text-body1">
-              By accepting the application you are officially inviting Mohammad Rashid for an
+              By accepting the application you are officially inviting the applicant for an
               in-person interview.
             </div>
             <q-stepper-navigation>

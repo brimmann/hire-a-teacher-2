@@ -1,9 +1,6 @@
 <template>
   <q-page padding class="column items-center" v-if="status === 'main'">
-    <div
-      class="text-subtitle1 text-grey-8 text-center"
-      v-if="orgStore.interviews.length < 1"
-    >
+    <div class="text-subtitle1 text-grey-8 text-center" v-if="orgStore.interviews.length < 1">
       <span class="text-bold">No interviews</span>
     </div>
     <div style="width: 80%; max-width: 800px" v-else>
@@ -14,8 +11,76 @@
         :interview="interview.interview"
         :key="index"
         @view-resume="viewResume"
+        @select-app="selectApplicant = true"
       />
     </div>
+    <q-dialog v-model="selectApplicant" persistent>
+      <q-card square flat class="full-width">
+        <q-card-section class="row justify-between">
+          <div class="text-subtitle1 text-bold">Recruiting applicant</div>
+          <q-space />
+          <q-btn dense flat icon="close" @click="selectApplicant = false" />
+        </q-card-section>
+
+        <q-stepper v-model="step" vertical color="primary" animated>
+          <q-step :name="1" title="Agreement" icon="handshake" :done="step > 1">
+            <div class="text-body2">
+              To continue the selection process please agree to the following terms:
+              <ul>
+                <li class="q-mb-sm">
+                  The employer is responsible to obey National Labour Law Profile, Islamic Republic of Pakistan and
+                  provide all the rights to the applicant that are applicable.
+                </li>
+                <li>
+                  The <strong>Tokens</strong> that are generated as per recruitment process must be distributed to the
+                  the students in order to provide feedback to the applicant profile on www.teacher.pk to contribute to
+                  the applicant's profile ranking.
+                </li>
+              </ul>
+            </div>
+            <q-stepper-navigation>
+              <q-btn @click="step = 2" color="primary" label="Agree" />
+            </q-stepper-navigation>
+          </q-step>
+
+          <q-step
+            :name="2"
+            title="Provide estimated number of students"
+            icon="groups"
+            :done="step > 2"
+          >
+            <q-input square bottom-slots outlined style="width: 100%" v-model="numberOfStudents">
+              <template #hint>
+                Specifying estimated number students that this teacher will teach is required for
+                feedback tokens generation
+              </template>
+            </q-input>
+            <q-stepper-navigation>
+              <q-btn @click="step = 3" color="primary" label="Continue" />
+              <q-btn flat @click="step = 1" color="primary" label="Back" class="q-ml-sm" />
+            </q-stepper-navigation>
+          </q-step>
+
+          <q-step :name="3" title="Choose interview date" icon="calendar_month" :done="step > 3">
+            <q-select
+              outlined
+              bottom-slots
+              v-model="duration"
+              :options="durationsList"
+              label="Course duration"
+            >
+              <template #hint>
+                Primary teaching period for the teacher is required for feedback token activation
+              </template>
+            </q-select>
+            <q-stepper-navigation>
+              <q-btn color="primary" label="Finish" @click="selectApplicant = false" />
+              <q-btn flat @click="step = 2" color="primary" label="Back" class="q-ml-sm" />
+            </q-stepper-navigation>
+          </q-step>
+        </q-stepper>
+      </q-card>
+    </q-dialog>
   </q-page>
   <q-page v-else padding class="column items-center">
     <div class="row q-mb-md justify-between items-center full-width">
@@ -57,7 +122,22 @@ export default {
   data() {
     return {
       status: 'main',
-      viewingInterview: null
+      viewingInterview: null,
+      selectApplicant: true,
+      step: 1,
+      numberOfStudents: null,
+      duration: {
+        label: '15 Days',
+        value: 15,
+      },
+      durationsList: [
+        { label: '15 Days', value: 15 },
+        { label: '1 Month', value: 30 },
+        { label: '2 Months', value: 60 },
+        { label: '3 Months', value: 90 },
+        { label: '4 Months', value: 120 },
+        { label: '6 Months', value: 180 },
+      ],
     };
   },
   computed: {
@@ -70,8 +150,8 @@ export default {
     },
     viewResume(interview) {
       this.viewingInterview = interview;
-      this.status = "resume";
-    }
+      this.status = 'resume';
+    },
   },
   created() {
     this.orgStore.getInterviews();

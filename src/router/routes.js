@@ -56,6 +56,11 @@ const routes = [
         component: () => import('pages/OrgInterviews'),
         name: 'o-interviews',
       },
+      {
+        path: 'tokens',
+        component: () => import('pages/FeedbackTokens'),
+        name: 'tokens',
+      },
     ],
   },
 
