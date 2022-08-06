@@ -38,7 +38,7 @@
                 v-show="!loading"
                 @click="onSearchTeacher"
               />
-              <q-icon color="primary" name="search" v-show="!loading" v-else/>
+              <q-icon color="primary" name="search" v-show="!loading" v-else />
             </template>
           </q-input>
           <q-btn
@@ -181,7 +181,9 @@ export default {
         case 'o-app':
           return { text: 'Applications', icon: 'drafts' };
         case 'o-interviews':
-          return { text: 'Interviews', icon: 'live_help'}
+          return { text: 'Interviews', icon: 'live_help' };
+        case 'tokens':
+          return { text: 'Tokens', icon: 'backup_table' };
         default:
           return null;
       }
@@ -192,7 +194,7 @@ export default {
       this.leftDrawerOpen = !this.leftDrawerOpen;
     },
     async onSearchTeacher() {
-      if (this.searchString === "") {
+      if (this.searchString === '') {
         return;
       }
       try {

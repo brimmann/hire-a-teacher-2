@@ -3,13 +3,14 @@
     <q-item v-for="(item, index) in visibleData" :key="index">
       <q-item-section>
         <div class="row justify-between items-center q-mr-sm">
-          <div class="text-body1">{{ item }}</div>
-          <div class="text-caption text-grey">Shared</div>
+          <div class="text-body1" :class="{'text-strike': item.status === 'used'}">{{ item.token }}</div>
+          <div class="text-caption text-grey">{{ item.status }}</div>
         </div>
       </q-item-section>
       <q-separator vertical/>
-      <q-item-section side>
-        <q-btn dense unelevated icon="content_copy" @click="copyToken(index)"/>
+      <q-item-section side style="width: 40px" class="row flex-center">
+        <q-icon name="check" v-if="item.status === 'used'"/>
+        <q-btn dense unelevated icon="content_copy" @click="copyToken(index)" v-else/>
       </q-item-section>
     </q-item>
   </q-list>
@@ -25,15 +26,20 @@ import {copyToClipboard} from "quasar";
 
 export default {
   name: 'TokensView',
+  props: {
+    tokens: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
       current: 1,
     };
   },
   computed: {
-    ...mapStores(useOrgStore),
     visibleData() {
-      const data = this.orgStore.tokens;
+      const data = this.tokens;
       const start = (this.current - 1) * 7;
       if(this.current === this.max) {
         return data.slice(start)
@@ -42,13 +48,13 @@ export default {
       return data.slice(start, end);
     },
     max() {
-      const dataLength = this.orgStore.tokens.length;
+      const dataLength = this.tokens.length;
       return Math.ceil(dataLength / 7);
     },
   },
   methods: {
     copyToken(index) {
-      copyToClipboard(this.orgStore.tokens[index])
+      copyToClipboard(this.tokens[index])
         .then(() => {
           this.$q.notify({
             message: 'copied to clipboard',

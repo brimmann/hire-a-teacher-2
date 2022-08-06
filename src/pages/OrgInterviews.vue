@@ -9,9 +9,10 @@
         v-for="(interview, index) in orgStore.interviews"
         :job="interview.job"
         :interview="interview.interview"
+        :index="index"
         :key="index"
         @view-resume="viewResume"
-        @select-app="selectApplicant = true"
+        @select-app="getInterview(interview.interview, interviewIndex)"
       />
     </div>
     <q-dialog v-model="selectApplicant" persistent>
@@ -28,13 +29,13 @@
               To continue the selection process please agree to the following terms:
               <ul>
                 <li class="q-mb-sm">
-                  The employer is responsible to obey National Labour Law Profile, Islamic Republic of Pakistan and
-                  provide all the rights to the applicant that are applicable.
+                  The employer is responsible to obey National Labour Law Profile, Islamic Republic
+                  of Pakistan and provide all the rights to the applicant that are applicable.
                 </li>
                 <li>
-                  The <strong>Tokens</strong> that are generated as per recruitment process must be distributed to the
-                  the students in order to provide feedback to the applicant profile on www.teacher.pk to contribute to
-                  the applicant's profile ranking.
+                  The <strong>Tokens</strong> that are generated as per recruitment process must be
+                  distributed to the the students in order to provide feedback to the applicant
+                  profile on www.teacher.pk to contribute to the applicant's profile ranking.
                 </li>
               </ul>
             </div>
@@ -49,7 +50,14 @@
             icon="groups"
             :done="step > 2"
           >
-            <q-input square bottom-slots outlined style="width: 100%" v-model="numberOfStudents">
+            <q-input
+              square
+              bottom-slots
+              outlined
+              label="Number of students"
+              style="width: 100%"
+              v-model="numberOfStudents"
+            >
               <template #hint>
                 Specifying estimated number students that this teacher will teach is required for
                 feedback tokens generation
@@ -74,7 +82,7 @@
               </template>
             </q-select>
             <q-stepper-navigation>
-              <q-btn color="primary" label="Finish" @click="selectApplicant = false" />
+              <q-btn color="primary" label="Finish" @click="selectingTheApplicant" />
               <q-btn flat @click="step = 2" color="primary" label="Back" class="q-ml-sm" />
             </q-stepper-navigation>
           </q-step>
@@ -117,13 +125,15 @@ import InterviewItemOrg from 'components/hiring/InterviewItemOrg';
 import ResumePublicView from 'components/resume/ResumePublicView';
 
 export default {
-  name: 'JobOffersOrg',
+  name: 'OrgInterview',
   components: { ResumePublicView, InterviewItemOrg },
   data() {
     return {
       status: 'main',
+      selectingInterview: null,
       viewingInterview: null,
-      selectApplicant: true,
+      selectApplicant: false,
+      interviewIndex: null,
       step: 1,
       numberOfStudents: null,
       duration: {
@@ -148,9 +158,34 @@ export default {
       document.body.scrollTop = 0;
       document.documentElement.scrollTop = 0;
     },
-    viewResume(interview) {
+    viewResume(interview, interviewIndex) {
+      this.interviewIndex = interviewIndex;
       this.viewingInterview = interview;
       this.status = 'resume';
+    },
+    getInterview(interview) {
+      this.selectingInterview = interview;
+      this.selectApplicant = true;
+    },
+    async selectingTheApplicant() {
+      try {
+        const payload = {
+          interview_id: this.selectingInterview.id,
+          students: parseInt(this.numberOfStudents),
+          days: parseInt(this.duration.value),
+        };
+        await this.orgStore.selectTheApplicant(payload);
+        this.orgStore.interviews.splice(this.interviewIndex, 1);
+        this.selectApplicant = false;
+        this.step = 1;
+        this.numberOfStudents = null;
+        this.duration = {
+          label: '15 Days',
+          value: 15,
+        };
+      } catch (e) {
+        console.log('selecting-error', e.message);
+      }
     },
   },
   created() {

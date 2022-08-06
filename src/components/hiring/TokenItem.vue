@@ -1,8 +1,9 @@
 <template>
   <q-card class="my-card" flat bordered>
     <q-card-section>
-      <div class="text-h6">Web trainer</div>
-      <div class="text-body1">38 Tokens, activate on September 1, 2022</div>
+      <div class="text-h6">{{ token.header.job_title }}</div>
+      <div class="text-body1 text-grey">{{ token.header.teacher }}</div>
+      <div class="text-body1 text-info">{{ token.tokens.length }} tokens, activate on {{ token.header.activation_date }}</div>
     </q-card-section>
     <q-separator />
     <q-card-actions>
@@ -23,7 +24,7 @@
     <q-slide-transition>
       <div v-if="expanded">
         <q-card-section class="q-py-sm">
-          <tokens-view/>
+          <tokens-view :tokens="token.tokens"/>
         </q-card-section>
       </div>
     </q-slide-transition>
@@ -35,6 +36,12 @@ import TokensView from "components/hiring/TokensView";
 export default {
   name: 'TokenItem',
   components: {TokensView},
+  props: {
+    token: {
+      type: Object,
+      required: true
+    }
+  },
   data() {
     return {
       expanded: false
