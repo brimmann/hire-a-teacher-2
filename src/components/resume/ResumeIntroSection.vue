@@ -26,13 +26,22 @@
     <q-space />
   </q-card>
   <q-card flat class="max-width" style="width: 100%" v-else>
-    <q-card-section class="row">
+    <q-card-section class="row q-py-sm">
       <div class="text-h5" ref="test-ref">{{ resumeStore.intro.fullName }}</div>
       <q-space />
       <q-btn flat v-if="!readOnly" round color="accent" icon="edit" @click="resumeStore.intro.editing = true" />
     </q-card-section>
-    <q-card-section>
+    <q-card-section class="q-my-none q-py-none q-mb-sm">
       <div class="text-subtitle1 q-mb-sm">{{ resumeStore.intro.headline }}</div>
+      <div class="column">
+        <div class="inline-block q-mb-xs">
+          <q-chip class="q-ma-none" square outline icon-right="star" :label="resumeStore.intro.ranking" color="yellow-9"/>
+        </div>
+        <di class="text-caption text-grey"> {{resumeStore.intro.students}} Students</di>
+      </div>
+    </q-card-section>
+    <q-card-section>
+
       <div class="text-body2">{{ resumeStore.intro.phoneNumber }}</div>
       <div class="text-body2">{{ resumeStore.intro.emailAddress }}</div>
       <div class="text-body2 q-mb-lg">{{ resumeStore.intro.address }}</div>

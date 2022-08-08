@@ -3,6 +3,7 @@
     <q-card-section>
       <div class="text-subtitle1">Sent by {{ application.teacher_name }}</div>
       <div class="text-subtitle1 text-grey-5">4 hours ago</div>
+      <q-chip class="q-ma-none q-mt-sm" square outline icon-right="star" :label="application.ranking" color="yellow-9"/>
       <q-separator spaced/>
       <q-btn
         color="primary"

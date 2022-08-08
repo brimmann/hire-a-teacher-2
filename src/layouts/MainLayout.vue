@@ -1,116 +1,92 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+  <q-layout view="hhh LpR fff">
+    <q-header class="bg-transparent q-mt-xl relative-position">
+      <q-toolbar class="text-black" style="padding: 8px 100px">
+        <q-img src="../assets/logo-2.png" width="250px" height="30px" position="-50px" />
+        <q-space />
+        <div class="row justify-between q-gutter-lg text-subtitle1">
+          <div class="cursor-pointer non-selectable" @click="startFeedback">Rate teacher</div>
+          <div>About us</div>
+          <div>Help center</div>
+        </div>
       </q-toolbar>
     </q-header>
-
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in essentialLinks"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
+      <feedback-dialog/>
       <router-view />
     </q-page-container>
+    <q-footer class="row justify-center q-py-xl" style="gap: 80px">
+      <div>
+        <q-img src="../assets/logo-2.png" width="250px" height="30px" position="-50px" />
+        <div class="text-h6 q-mb-lg">Boost educations, write the future</div>
+        <div class="row q-gutter-sm">
+          <q-btn
+            flat
+            size="1.2em"
+            :ripple="false"
+            padding="none"
+            icon="fab fa-facebook-square"
+            href="https://www.facebook.com"
+          />
+          <q-btn
+            flat
+            size="1.2em"
+            :ripple="false"
+            padding="none"
+            icon="fab fa-twitter-square"
+            href="https://twitter.com"
+          />
+          <q-btn
+            flat
+            size="1.2em"
+            :ripple="false"
+            padding="none"
+            icon="fab fa-linkedin"
+            href="https://www.linkedin.com/feed/"
+          />
+        </div>
+      </div>
+      <div>
+        <div class="text-subtitle1 text-bold" style="text-decoration: underline">Links</div>
+        <div class="text-body1 q-mb-xs">About us</div>
+        <div class="text-body1 q-mb-xs">Terms</div>
+        <div class="text-body1">Policy</div>
+      </div>
+      <div>
+        <div class="text-subtitle1 text-bold" style="text-decoration: underline">Contact</div>
+        <div class="text-body1 q-mb-lg">
+          Islamic University<br />
+          H10 sector<br />
+          Islamabad City<br />
+          Islamabad<br />
+          Pakistan
+        </div>
+        <div class="text-body1">
+          contact@hireateacher.pk<br />
+          +92-325-3021332
+        </div>
+      </div>
+    </q-footer>
   </q-layout>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
-export default defineComponent({
+import FeedbackDialog from "components/feedback/FeedbackDialog";
+import {mapWritableState} from "pinia";
+import {useCommonStore} from "stores/common";
+export default {
   name: 'MainLayout',
-
-  components: {
-    EssentialLink
+  components: {FeedbackDialog},
+  computed: {
+    ...mapWritableState(useCommonStore, ['feedback', 'step'])
   },
-
-  setup () {
-    const leftDrawerOpen = ref(false)
-
-    return {
-      essentialLinks: linksList,
-      leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+  methods: {
+    startFeedback() {
+      this.feedback = true;
+      this.step = 1;
     }
   }
-})
+};
 </script>
+
+<style scoped></style>

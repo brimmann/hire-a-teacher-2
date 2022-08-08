@@ -15,7 +15,7 @@
             {{ exp.start_date_month + ' ' + exp.start_date_year }} –
             {{ exp.end_date_month + ' ' + exp.end_date_year }}
           </div>
-          <div class="text-body2 q-mt-sm" v-html="exp.description"></div>
+          <div class="text-body1 q-mt-sm" v-html="exp.description"></div>
         </q-card-section>
       </q-card>
     </div>
@@ -69,7 +69,7 @@
             />
           </div>
         </div>
-        <div>
+        <div class="text-body1">
           <q-editor
             square
             v-model="exp.description"

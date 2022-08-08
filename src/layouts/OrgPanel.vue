@@ -116,7 +116,7 @@
 
             <q-item-section>Feedback tokens</q-item-section>
           </q-item>
-          <q-item clickable v-ripple>
+          <q-item clickable v-ripple @click="logout">
             <q-item-section avatar>
               <q-icon name="logout" />
             </q-item-section>
@@ -148,6 +148,7 @@
 <script>
 import { mapStores } from 'pinia';
 import { useOrgStore } from 'stores/org';
+import {useUserStore} from "stores/user";
 
 export default {
   name: 'OrgPanel',
@@ -159,7 +160,7 @@ export default {
     };
   },
   computed: {
-    ...mapStores(useOrgStore),
+    ...mapStores(useOrgStore, useUserStore),
     subtitle() {
       if (this.orgStore.determiners.dashboardState === 'adding') {
         return 'Adding a new job';
@@ -187,7 +188,7 @@ export default {
         default:
           return null;
       }
-    },
+    }
   },
   methods: {
     toggleLeftDrawer() {
@@ -205,6 +206,10 @@ export default {
         this.loading = false;
       }
     },
+    logout() {
+      this.$router.push('/');
+      this.userStore.logout();
+    }
   },
 };
 </script>

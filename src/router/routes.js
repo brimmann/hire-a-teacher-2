@@ -1,3 +1,5 @@
+import { useUserStore } from 'stores/user';
+
 const routes = [
   {
     path: '/',
@@ -15,6 +17,15 @@ const routes = [
   {
     path: '/teacher',
     redirect: '/teacher/search',
+    name: 'teacher-in',
+    beforeEnter: () => {
+      const user = useUserStore();
+      if (user.userType === 'org' || user.token === null) {
+        return '/forbid';
+      } else {
+        return true;
+      }
+    },
     component: () => import('layouts/TeacherPanel.vue'),
     children: [
       { path: 'search', component: () => import('pages/JobSearch'), name: 'search' },
@@ -38,6 +49,15 @@ const routes = [
   {
     path: '/org',
     redirect: '/org/dashboard',
+    name: 'org-in',
+    beforeEnter: () => {
+      const user = useUserStore();
+      if (user.userType === 'teacher' || user.token === null) {
+        return '/forbid';
+      } else {
+        return true;
+      }
+    },
     component: () => import('../layouts/OrgPanel'),
     children: [
       { path: 'dashboard', component: () => import('pages/DashboardPage'), name: 'dashboard' },
@@ -62,6 +82,11 @@ const routes = [
         name: 'tokens',
       },
     ],
+  },
+  {
+    path: '/forbid',
+    name: 'forbid',
+    component: () => import('pages/PageForbidden'),
   },
 
   // Always leave this as last one,

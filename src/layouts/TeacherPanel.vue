@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh LpR lFf">
+  <q-layout view="lhh LpR lFf">
     <q-header
       class="bg-primary text-white"
       v-if="resumeStore.adding.resume || !resumeStore.noResume || !($route.name === 'resume')"
@@ -142,7 +142,7 @@
 
             <q-item-section> Interviews </q-item-section>
           </q-item>
-          <q-item clickable v-ripple>
+          <q-item clickable v-ripple @click="logout">
             <q-item-section avatar>
               <q-icon name="logout" />
             </q-item-section>
@@ -153,6 +153,7 @@
       </q-scroll-area>
 
       <q-img class="absolute-top" src="../assets/background-mat-1.jpg" style="height: 200px">
+
         <div class="absolute-bottom bg-transparent">
           <div
             class="bg-grey-1 text-black text-h4 text-center row flex-center"
@@ -234,6 +235,10 @@ export default {
         this.loading = false;
       }
     },
+    logout() {
+      this.$router.push('/');
+      this.userStore.logout();
+    }
   },
 };
 </script>

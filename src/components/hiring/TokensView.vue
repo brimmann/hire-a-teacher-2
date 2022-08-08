@@ -10,7 +10,7 @@
       <q-separator vertical/>
       <q-item-section side style="width: 40px" class="row flex-center">
         <q-icon name="check" v-if="item.status === 'used'"/>
-        <q-btn dense unelevated icon="content_copy" @click="copyToken(index)" v-else/>
+        <q-btn dense unelevated icon="content_copy" @click="copyToken(item.token)" v-else/>
       </q-item-section>
     </q-item>
   </q-list>
@@ -53,8 +53,8 @@ export default {
     },
   },
   methods: {
-    copyToken(index) {
-      copyToClipboard(this.tokens[index])
+    copyToken(token) {
+      copyToClipboard(token)
         .then(() => {
           this.$q.notify({
             message: 'copied to clipboard',

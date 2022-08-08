@@ -143,5 +143,16 @@ export const useUserStore = defineStore('user', {
         this.userType = userData.userType;
       }
     },
+    logout() {
+      this.token = null;
+      this.userId = null;
+      this.userDetails = null;
+      this.userType = null;
+      this.newUser = false;
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userDetails');
+      localStorage.removeItem('userType');
+    },
   },
 });

@@ -2,7 +2,7 @@
   <q-layout view="hHh Lpr lfr">
     <q-header class="bg-primary text-white" height-hint="98">
       <q-toolbar class="text-white">
-        <div class="text-h6 text-bold text-brown-3">Hire A Teacher</div>
+        <q-img src="../assets/logo-2.png" width="250px" height="30px" position="-50px" class="cursor-pointer" @click="$router.push('/')"/>
         <q-space />
         <q-btn-toggle
           v-model="model"
