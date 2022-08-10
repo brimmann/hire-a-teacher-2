@@ -88,8 +88,8 @@ export default {
   },
   methods: {
     async login() {
-      this.loggingIn = true;
       try {
+        this.loggingIn = true;
         await this.userStore.login({
           email: this.email,
           password: this.password,
@@ -103,6 +103,7 @@ export default {
         }
       } catch (e) {
         this.loggingIn = false;
+        console.log(e.response)
       }
     },
   },

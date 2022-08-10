@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { useUserStore } from 'stores/user';
-import axios from 'axios';
+import { api } from 'boot/axios';
 
 export const useResumeStore = defineStore('resume', {
   state: () => ({
@@ -25,7 +25,7 @@ export const useResumeStore = defineStore('resume', {
       const that = this;
       try {
         this.resumeLoading = !background;
-        const response = await axios.get('http://127.0.0.1:8000/api/v1/resume/', {
+        const response = await api.get('/api/v1/resume/', {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -59,7 +59,7 @@ export const useResumeStore = defineStore('resume', {
 
       console.log('this goes into: ', dataBlock);
 
-      await axios.post('http://127.0.0.1:8000/api/v1/resume/create', dataBlock, {
+      await api.post('/api/v1/resume/create', dataBlock, {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -79,7 +79,7 @@ export const useResumeStore = defineStore('resume', {
 
       console.log('this goes into: ', dataBlock);
 
-      await axios.put('http://127.0.0.1:8000/api/v1/resume/update/' + user.userId, dataBlock, {
+      await api.put('/api/v1/resume/update/' + user.userId, dataBlock, {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -100,7 +100,7 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/exp', dataBlock, {
+        await api.post('/api/v1/resume/create/exp', dataBlock, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -126,7 +126,7 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.put('http://127.0.0.1:8000/api/v1/resume/update/exp/' + payload.id, dataBlock, {
+        await api.put('/api/v1/resume/update/exp/' + payload.id, dataBlock, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -139,7 +139,7 @@ export const useResumeStore = defineStore('resume', {
       const user = useUserStore();
 
       try {
-        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/exp/' + payload, {
+        await api.delete('/api/v1/resume/delete/exp/' + payload, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -164,7 +164,7 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/edu', dataBlock, {
+        await api.post('/api/v1/resume/create/edu', dataBlock, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -189,7 +189,7 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.put('http://127.0.0.1:8000/api/v1/resume/update/edu/' + payload.id, dataBlock, {
+        await api.put('/api/v1/resume/update/edu/' + payload.id, dataBlock, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -202,7 +202,7 @@ export const useResumeStore = defineStore('resume', {
       const user = useUserStore();
 
       try {
-        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/edu/' + payload, {
+        await api.delete('/api/v1/resume/delete/edu/' + payload, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -220,7 +220,7 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/skill', dataBlock, {
+        await api.post('/api/v1/resume/create/skill', dataBlock, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -239,15 +239,11 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.put(
-          'http://127.0.0.1:8000/api/v1/resume/update/skill/' + payload.id,
-          dataBlock,
-          {
-            headers: {
-              Authorization: 'Token ' + user.token,
-            },
-          }
-        );
+        await api.put('/api/v1/resume/update/skill/' + payload.id, dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
       } catch (e) {
         console.log(e.message);
       }
@@ -256,7 +252,7 @@ export const useResumeStore = defineStore('resume', {
       const user = useUserStore();
 
       try {
-        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/skill/' + payload, {
+        await api.delete('/api/v1/resume/delete/skill/' + payload, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -275,7 +271,7 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.post('http://127.0.0.1:8000/api/v1/resume/create/lang', dataBlock, {
+        await api.post('/api/v1/resume/create/lang', dataBlock, {
           headers: {
             Authorization: 'Token ' + user.token,
           },
@@ -295,15 +291,11 @@ export const useResumeStore = defineStore('resume', {
       };
 
       try {
-        await axios.put(
-          'http://127.0.0.1:8000/api/v1/resume/update/lang/' + payload.id,
-          dataBlock,
-          {
-            headers: {
-              Authorization: 'Token ' + user.token,
-            },
-          }
-        );
+        await api.put('/api/v1/resume/update/lang/' + payload.id, dataBlock, {
+          headers: {
+            Authorization: 'Token ' + user.token,
+          },
+        });
       } catch (e) {
         console.log(e.message);
       }
@@ -312,7 +304,7 @@ export const useResumeStore = defineStore('resume', {
       const user = useUserStore();
 
       try {
-        await axios.delete('http://127.0.0.1:8000/api/v1/resume/delete/lang/' + payload, {
+        await api.delete('/api/v1/resume/delete/lang/' + payload, {
           headers: {
             Authorization: 'Token ' + user.token,
           },

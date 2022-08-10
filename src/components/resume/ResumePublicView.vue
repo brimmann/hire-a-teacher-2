@@ -48,7 +48,7 @@ export default {
   created() {
     console.log('resume-view', this.resumeId)
     const token = this.userStore.token;
-    axios.get('http://127.0.0.1:8000/api/v1/resume/public?id=' + this.resumeId, {
+    this.$api.get('/api/v1/resume/public?id=' + this.resumeId, {
       headers: {
         Authorization: 'Token ' + token,
       },

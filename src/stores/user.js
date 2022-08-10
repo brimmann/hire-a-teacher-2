@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { api } from 'boot/axios';
+import { Notify } from 'quasar';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -17,7 +19,7 @@ export const useUserStore = defineStore('user', {
         password2: payload.password2,
         type: 'teacher',
       };
-      const responseReg = await axios.post('http://127.0.0.1:8000/api/v1/registration/', regBasic);
+      const responseReg = await api.post('/api/v1/registration/', regBasic);
 
       const regDetails = {
         full_name: payload.full_name,
@@ -36,15 +38,11 @@ export const useUserStore = defineStore('user', {
       this.token = responseReg.data.key;
       this.userId = responseReg.data.user;
 
-      const detailsRes = await axios.post(
-        'http://127.0.0.1:8000/api/v1/teacher/add_details',
-        regDetails,
-        {
-          headers: {
-            Authorization: 'Token ' + responseReg.data.key,
-          },
-        }
-      );
+      const detailsRes = await api.post('/api/v1/teacher/add_details', regDetails, {
+        headers: {
+          Authorization: 'Token ' + responseReg.data.key,
+        },
+      });
 
       this.persistUser();
     },
@@ -56,7 +54,7 @@ export const useUserStore = defineStore('user', {
         password2: payload.password2,
         type: 'org',
       };
-      const responseReg = await axios.post('http://127.0.0.1:8000/api/v1/registration/', regBasic);
+      const responseReg = await api.post('/api/v1/registration/', regBasic);
 
       const regDetails = {
         org_name: payload.orgName,
@@ -66,7 +64,7 @@ export const useUserStore = defineStore('user', {
         user: responseReg.data.user,
       };
 
-      await axios.post('http://127.0.0.1:8000/api/v1/org/add_details', regDetails, {
+      await api.post('/api/v1/org/add_details', regDetails, {
         headers: {
           Authorization: 'Token ' + responseReg.data.key,
         },
@@ -74,7 +72,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async login(payload) {
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/login/', payload);
+      const response = await api.post('/api/v1/login/', payload);
       this.token = response.data.key;
       this.userId = response.data.user;
       this.userType = payload.type;
@@ -91,7 +89,7 @@ export const useUserStore = defineStore('user', {
       this.persistUser(response);
     },
     async setTeacherDetails(response) {
-      const detailsRes = await axios.get('http://127.0.0.1:8000/api/v1/teacher/get_details', {
+      const detailsRes = await api.get('/api/v1/teacher/get_details', {
         headers: {
           Authorization: 'Token ' + response.data.key,
         },
@@ -106,7 +104,7 @@ export const useUserStore = defineStore('user', {
     },
 
     async setOrgDetails(response) {
-      const detailsRes = await axios.get('http://127.0.0.1:8000/api/v1/org/get_details', {
+      const detailsRes = await api.get('/api/v1/org/get_details', {
         headers: {
           Authorization: 'Token ' + response.data.key,
         },
@@ -153,6 +151,14 @@ export const useUserStore = defineStore('user', {
       localStorage.removeItem('userId');
       localStorage.removeItem('userDetails');
       localStorage.removeItem('userType');
+    },
+    notifyError(message) {
+      Notify.create({
+        message: message,
+        type: 'negative',
+        position: 'bottom-left',
+        timeout: 5000,
+      });
     },
   },
 });

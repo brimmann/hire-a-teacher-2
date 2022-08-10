@@ -12,7 +12,7 @@
         </div>
         <div class="q-mt-xl">
           <q-btn size="1.2em" v-if="userType === 'teacher'" to="/teacher" unelevated color="primary" label="Go to your panel"/>
-          <q-btn size="1.2em" v-if="userType === 'org'" to="/org" unelevated color="primary" label="Go to your panel"/>
+          <q-btn size="1.2em" v-else-if="userType === 'org'" to="/org" unelevated color="primary" label="Go to your panel"/>
           <temp v-else>
             <q-btn color="primary" to="/auth/register" size="1.2em" label="Sign up" unelevated />
             <q-btn

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
+import { api } from 'boot/axios';
 
 export const useCommonStore = defineStore('common', {
   state: () => ({
@@ -16,7 +17,7 @@ export const useCommonStore = defineStore('common', {
         this.errorMessage = 'Enter your token here';
         return;
       }
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/feeback/get_info', payload);
+      const response = await api.post('/api/v1/feeback/get_info', payload);
       if (response.data === 'token_not_found') {
         this.errorMessage = 'Token not found';
       } else if (response.data === 'token_used') {
@@ -36,7 +37,7 @@ export const useCommonStore = defineStore('common', {
         token: this.submittingToken,
         rating: payload,
       };
-      await axios.post('http://127.0.0.1:8000/api/v1/feeback/submit', dataBlock);
+      await api.post('/api/v1/feeback/submit', dataBlock);
     },
   },
 });

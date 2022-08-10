@@ -54,7 +54,8 @@
                 v-model="teacherRegData.password1"
                 label="Password"
                 type="password"
-                :rules="requiredRules"
+                :rules="passwordRules"
+                lazy-rules
               />
 
               <q-input
@@ -137,7 +138,8 @@
                 v-model="orgRegData.password1"
                 label="Password"
                 type="password"
-                :rules="requiredRules"
+                :rules="passwordRules"
+                lazy-rules
               />
 
               <q-input
@@ -172,7 +174,7 @@
 </template>
 
 <script>
-import { mapStores } from "pinia";
+import {mapActions, mapStores} from "pinia";
 // import {useUserStore} from "stores/user";
 // import {ref} from "vue";
 //
@@ -210,6 +212,10 @@ export default {
         (val) => !!val || "Field is required",
         (val) => val.includes("@") || "Invalid email",
       ],
+      passwordRules:[
+        (val) => !!val || "Field is required",
+        (val) => val.length >= 8 || "Password must be at least 8 characters",
+      ],
       passwordMatchRulesTeacher: [
         (val) => !!val || "Field is required",
         (val) => val === this.teacherRegData.password1 || "Password doesn't match",
@@ -226,15 +232,37 @@ export default {
   },
   methods: {
     async regTeacher() {
-      this.registering = true;
-      await this.userStore.registerTeacher(this.teacherRegData);
-      this.registering = false;
-      await this.$router.push({name: "resume"});
+      try {
+        this.registering = true;
+        await this.userStore.registerTeacher(this.teacherRegData);
+        this.registering = false;
+        await this.$router.push({name: "resume"});
+      } catch (e) {
+        if(e.response.data.email[0] === "A user is already registered with this e-mail address.") {
+          this.userStore.notifyError("User with this email already exist");
+        } else {
+          this.userStore.notifyError("Internal error")
+        }
+        this.registering = false;
+        console.log(e.response);
+      }
     },
     async regOrg() {
-      this.registering = true;
-      await this.userStore.registerOrg(this.orgRegData);
-      this.registering = false;
+      try {
+        this.registering = true;
+        await this.userStore.registerOrg(this.orgRegData);
+        await this.$router.push({name: "dashboard"});
+        this.registering = false;
+      } catch (e) {
+        if(e.response.data.email[0] === "A user is already registered with this e-mail address.") {
+          this.userStore.notifyError("User with this email already exist");
+        } else {
+          this.userStore.notifyError("Internal error")
+        }
+        this.registering = false;
+        console.log(e.response);
+      }
+
     },
   },
 };

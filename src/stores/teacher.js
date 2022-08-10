@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import { useUserStore } from 'stores/user';
+import { api } from 'boot/axios';
 
 export const useTeacherStore = defineStore('teacher', {
   state: () => ({
@@ -20,7 +21,7 @@ export const useTeacherStore = defineStore('teacher', {
   actions: {
     async getRelevantJobs() {
       const user = useUserStore();
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/get_rel', {
+      const response = await api.get('/api/v1/jobs/get_rel', {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -32,21 +33,18 @@ export const useTeacherStore = defineStore('teacher', {
     async searchJobs(payload) {
       const user = useUserStore();
       const searchString = payload.replace(' ', '+');
-      const response = await axios.get(
-        'http://127.0.0.1:8000/api/v1/jobs/search?search_string=' + searchString,
-        {
-          headers: {
-            Authorization: 'Token ' + user.token,
-          },
-        }
-      );
+      const response = await api.get('/api/v1/jobs/search?search_string=' + searchString, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
 
       this.searchJobResult = response.data.matched_jobs;
       this.searchResultOrig = JSON.parse(JSON.stringify(this.searchJobResult));
     },
     async getApplications() {
       const user = useUserStore();
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/apps', {
+      const response = await api.get('/api/v1/jobs/apps', {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -119,7 +117,7 @@ export const useTeacherStore = defineStore('teacher', {
 
       console.log(data);
 
-      await axios.post('http://127.0.0.1:8000/api/v1/jobs/apply', data, {
+      await api.post('/api/v1/jobs/apply', data, {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -128,7 +126,7 @@ export const useTeacherStore = defineStore('teacher', {
     async withdrawApplication(payload) {
       const user = useUserStore();
       console.log(payload);
-      await axios.delete('http://127.0.0.1:8000/api/v1/jobs/apps_withdraw/' + payload, {
+      await api.delete('/api/v1/jobs/apps_withdraw/' + payload, {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -136,7 +134,7 @@ export const useTeacherStore = defineStore('teacher', {
     },
     async getInterviews() {
       const user = useUserStore();
-      const response = await axios.get('http://127.0.0.1:8000/api/v1/jobs/interviews', {
+      const response = await api.get('/api/v1/jobs/interviews', {
         headers: {
           Authorization: 'Token ' + user.token,
         },
@@ -146,14 +144,11 @@ export const useTeacherStore = defineStore('teacher', {
     },
     async cancelInterview(payload) {
       const user = useUserStore();
-      const response = await axios.delete(
-        'http://127.0.0.1:8000/api/v1/jobs/interviews_delete?id=' + payload,
-        {
-          headers: {
-            Authorization: 'Token ' + user.token,
-          },
-        }
-      );
+      const response = await api.delete('/api/v1/jobs/interviews_delete?id=' + payload, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
     },
   },
 });
