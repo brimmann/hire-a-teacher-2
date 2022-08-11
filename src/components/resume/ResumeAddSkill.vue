@@ -1,23 +1,24 @@
 <template>
   <div class="row max-width q-mb-md" style="width: 100%;">
-    <q-input outlined v-model="skill" label="Skill" class="col-7" />
-    <q-space/>
-    <q-btn
-      outline
-      color="white"
-      text-color="black"
-      label="Discard"
-      class="q-mr-md col-2"
-      @click="onDiscard"
-      unelevated
-    />
-    <q-btn
-      color="primary"
-      label="Add"
-      unelevated
-      @click="onSave"
-      class="col-2"
-    />
+    <q-form @submit.prevent.stop="onSave"  style="width: 100%;">
+      <q-input outlined v-model="skill" label="Skill" :rules="[val => !!val || 'Cannot be empty']" lazy-rules class="q-mb-sm"/>
+      <q-space/>
+      <q-btn
+        outline
+        color="white"
+        text-color="black"
+        label="Discard"
+        class="q-mr-md"
+        @click="onDiscard"
+        unelevated
+      />
+      <q-btn
+        color="primary"
+        label="Add"
+        unelevated
+        type="submit"
+      />
+    </q-form>
   </div>
 </template>
 

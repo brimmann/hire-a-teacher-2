@@ -5,7 +5,7 @@
       <q-icon name="check" size="4em" color="grey"/>
       <div class="text-h4 text-grey">No trending jobs</div>
     </div>
-    <div style="width: 70%" class="column q-gutter-y-lg" v-if="orgStore.determiners.dashboardState === 'jobs-list'">
+    <div style="width: 70%" class="column q-gutter-lg" v-if="orgStore.determiners.dashboardState === 'jobs-list'">
       <job-item v-for="(job, index) in orgStore.jobs" :key="index" :job="job" @delete-job="deleteJob(index)" @edit="editingJob(index)"/>
     </div>
     <div style="width: 70%;" v-else-if="orgStore.determiners.dashboardState === 'adding'" class="max-width">
@@ -41,12 +41,20 @@ export default {
       this.orgStore.determiners.dashboardState = 'editing';
     },
     async deleteJob(index) {
-      try {
-        await this.orgStore.deleteJob(index);
-      } catch (e) {
-        console.log('delete-error', e.message);
-      }
-      this.orgStore.jobs.splice(index, 1);
+      this.$q.dialog({
+        title: 'Deleting job',
+        message: 'Do you want to delete the job?',
+        ok: "Yes",
+        cancel: "No",
+        persistent: true
+      }).onOk(async () => {
+        try {
+          await this.orgStore.deleteJob(index);
+        } catch (e) {
+          console.log('delete-error', e.message);
+        }
+        this.orgStore.jobs.splice(index, 1);
+      })
     }
   },
   created() {

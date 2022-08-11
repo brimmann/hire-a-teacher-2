@@ -27,73 +27,82 @@
         style="width: 100%; gap: 16px"
         v-show="exp.editing"
       >
-        <q-input outlined v-model="exp.title" label="Title" />
-        <q-input outlined v-model="exp.org" label="Companay" />
-        <div style="width: 50%">
-          <div class="text-body1">From</div>
-          <div class="row justify-between items-center">
-            <q-select
-              style="width: 35%"
-              outlined
-              square
-              v-model="exp.start_date_year"
-              :options="yearsList"
-              label="Year"
-            />
-            <q-select
-              style="width: 62%"
-              outlined
-              v-model="exp.start_date_month"
-              :options="monthsList"
-              label="Month"
-            />
-          </div>
-        </div>
-        <div style="width: 50%">
-          <div class="text-body1">To</div>
-          <div class="row justify-between items-center">
-            <q-select
-              style="width: 35%"
-              outlined
-              square
-              v-model="exp.end_date_year"
-              :options="yearsList"
-              label="Year"
-            />
-            <q-select
-              style="width: 62%"
-              outlined
-              v-model="exp.end_date_month"
-              :options="monthsList"
-              label="Month"
-            />
-          </div>
-        </div>
-        <div class="text-body1">
-          <q-editor
-            square
-            v-model="exp.description"
-            :definitions="{
+       <q-form @submit.prevent.stop="confirmChanges(index)" class="q-col-gutter-md">
+         <q-input outlined v-model="exp.title" label="Title" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+         <q-input outlined v-model="exp.org" label="Company" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+         <div style="width: 50%">
+           <div class="text-body1">From</div>
+           <div class="row justify-between items-center">
+             <q-select
+               style="width: 35%"
+               outlined
+               square
+               v-model="exp.start_date_year"
+               :options="yearsList"
+               label="Year"
+               :rules="[val => !!val || 'Select an year']" lazy-rules
+             />
+             <q-select
+               style="width: 62%"
+               outlined
+               v-model="exp.start_date_month"
+               :options="monthsList"
+               label="Month"
+               :rules="[val => !!val || 'Select a month']" lazy-rules
+             />
+           </div>
+         </div>
+         <div style="width: 50%">
+           <div class="text-body1">To</div>
+           <div class="row justify-between items-center">
+             <q-select
+               style="width: 35%"
+               outlined
+               square
+               v-model="exp.end_date_year"
+               :options="yearsList"
+               label="Year"
+               :rules="selectRule" lazy-rules
+             />
+             <q-select
+               style="width: 62%"
+               outlined
+               v-model="exp.end_date_month"
+               :options="monthsList"
+               label="Month"
+               :rules="selectRule" lazy-rules
+             />
+             <div v-if="durationError" class="text-caption text-red">End date must be after start date</div>
+           </div>
+         </div>
+         <div class="text-body1">
+           <q-editor
+             square
+             v-model="exp.description"
+             placeholder="Describe your position and any significant accomplishments"
+             :definitions="{
               bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' },
             }"
-            :toolbar="[
+             :toolbar="[
               ['unordered', 'ordered'],
               ['undo', 'redo'],
             ]"
-          />
-        </div>
-        <div class="flex-center">
-          <q-btn
-            outline
-            color="white"
-            text-color="black"
-            label="Discard Changes"
-            class="q-mr-md"
-            @click="onExpDiscardChanges(index)"
-            unelevated
-          />
-          <q-btn color="primary" label="Save Changes" unelevated @click="onExpSaveChanges(index)" />
-        </div>
+           />
+         </div>
+         <div v-if="exp.description === '<br>'" class="text-caption text-grey">* Experience description required</div>
+         <div class="flex-center">
+           <q-btn
+             outline
+             color="white"
+             text-color="black"
+             label="Discard Changes"
+             class="q-mr-md"
+             @click="confirmDiscardChanges(index)"
+             unelevated
+           />
+           <q-btn color="primary" label="Save Changes" unelevated type="submit"/>
+         </div>
+       </q-form>
       </q-card>
     </div>
   </template>
@@ -102,6 +111,7 @@
 <script>
 import { mapStores } from 'pinia/dist/pinia.esm-browser';
 import { useResumeStore } from 'stores/resume';
+import {compareDesc, parse} from "date-fns";
 
 export default {
   name: 'ResumeExpSection',
@@ -253,6 +263,18 @@ export default {
         'November',
         'December',
       ],
+      durationError: false,
+      selectRule: [
+        val => !!val || 'Select an year',
+        () => {
+          this.durationError = false;
+          return true;
+        }
+      ],
+      durationRule: [
+        val => !!val || 'Select a month',
+        this.validateDuration
+      ],
     };
   },
   computed: {
@@ -265,6 +287,13 @@ export default {
       console.log('edit key: ', index, this.experiencesBuffer);
     },
     async onExpSaveChanges(index) {
+      if (!this.validateDuration(this.resumeStore.experiences[index])) {
+        this.durationError = true;
+        return;
+      }
+      if (this.resumeStore.experiences[index].description === '<br>') {
+        return;
+      }
       console.log('Debug-1', index);
       this.resumeStore.experiences[index - 1] = JSON.parse(
         JSON.stringify(this.resumeStore.experiences[index])
@@ -288,9 +317,65 @@ export default {
       window.scrollBy(0, -scrollAmount);
     },
     async onDeleteExp(index) {
-      const id = this.resumeStore.experiences[index].id;
-      this.resumeStore.experiences.splice(index, 2);
-      await this.resumeStore.deleteResumeExp(id);
+      this.$q.dialog({
+        title: 'Deleting experience',
+        message: 'Do you want to delete the experience?',
+        ok: "Yes",
+        cancel: "No",
+        persistent: true
+      }).onOk(async () => {
+        const id = this.resumeStore.experiences[index].id;
+        this.resumeStore.experiences.splice(index, 2);
+        await this.resumeStore.deleteResumeExp(id);
+      })
+
+    },
+    validateDuration(exp) {
+      const sYear = exp.start_date_year;
+      const sMonth = exp.start_date_month;
+      const eYear = exp.end_date_year;
+      const eMonth = exp.end_date_month;
+
+      if (sYear !== '' && sMonth !== '' && eYear !== '' && eMonth !== '') {
+        const startDate = parse(`${sYear} ${sMonth}`, 'yyyy MMMM', new Date());
+        const endDate = parse(`${eYear} ${eMonth}`, 'yyyy MMMM', new Date());
+
+        const compResult = compareDesc(startDate, endDate);
+        console.log(startDate, endDate);
+        console.log(compResult)
+        if (compResult <= 0) {
+          // this.durationError = true;
+          return false;
+        } else {
+          // this.durationError = false;
+          return true;
+        }
+      } else {
+        // this.durationError = false;
+        return false;
+      }
+    },
+    confirmChanges(index) {
+      this.$q.dialog({
+        title: 'Confirm',
+        message: 'Do you want to save changes?',
+        ok: "Yes",
+        cancel: "No",
+        persistent: true
+      }).onOk(data => {
+        this.onExpSaveChanges(index);
+      })
+    },
+    confirmDiscardChanges(index) {
+      this.$q.dialog({
+        title: 'Discarding changes',
+        message: 'Do you want to discard changes?',
+        ok: "Yes",
+        cancel: "No",
+        persistent: true
+      }).onOk(data => {
+        this.onExpDiscardChanges(index);
+      })
     },
   },
 };

@@ -32,14 +32,24 @@
           <div class="text-grey">Expires on July 22</div>
         </q-card-section>
         <q-separator inset />
-        <q-card-section class="text-body1">{{ job.description }}</q-card-section>
-        <q-separator inset />
         <q-card-section>
+          <div class="text-body1 wrap">
+            {{ job.description }}
+          </div>
+        </q-card-section>
+        <q-separator inset />
+        <q-card-section >
           <div class="text-caption text-grey q-mb-sm">
             These tags will not appear to people that view jobs, it will only be used by search
             engines
           </div>
-          <q-chip v-for="(tag, index) in job.tags" class="text-uppercase" outline square dense :label="'#' + tag" :key="index"/>
+          <div v-if="job.tags.length > 0">
+            <q-chip v-for="(tag, index) in job.tags" class="text-uppercase" outline square dense :label="'#' + tag" :key="index"/>
+          </div>
+          <div v-else class="text-body2 text-grey">
+            No tags added for this job
+          </div>
+
         </q-card-section>
       </div>
     </q-slide-transition>

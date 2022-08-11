@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
+import { useResumeStore } from 'stores/resume';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -64,11 +65,26 @@ export const useUserStore = defineStore('user', {
         user: responseReg.data.user,
       };
 
+      this.userType = 'org';
+
+      this.userDetails = {
+        org_name: payload.orgName,
+        mobile_number: payload.mobile_number,
+        phone_number: payload.phone_number,
+        address: payload.address,
+        user: responseReg.data.user,
+      };
+
+      this.token = responseReg.data.key;
+      this.userId = responseReg.data.user;
+
       await api.post('/api/v1/org/add_details', regDetails, {
         headers: {
           Authorization: 'Token ' + responseReg.data.key,
         },
       });
+
+      this.persistUser();
     },
 
     async login(payload) {
@@ -142,6 +158,8 @@ export const useUserStore = defineStore('user', {
       }
     },
     logout() {
+      const resume = useResumeStore();
+      resume.$reset();
       this.token = null;
       this.userId = null;
       this.userDetails = null;

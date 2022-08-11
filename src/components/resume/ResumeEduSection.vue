@@ -33,68 +33,74 @@
       style="width: 100%; gap: 16px"
       v-show="edu.editing"
     >
-      <q-select
-        style="width: 35%"
-        outlined
-        square
-        v-model="edu.level"
-        :options="levelOfEducationList"
-        label="Level of education"
-      />
-      <q-input outlined v-model="edu.field_of_study" label="Field of study" />
-      <q-input outlined v-model="edu.school" label="School" />
-      <div style="width: 50%">
-        <div class="text-body1">From</div>
-        <div class="row justify-between items-center">
-          <q-select
-            style="width: 35%"
-            outlined
-            square
-            v-model="edu.start_date_year"
-            :options="yearsList"
-            label="Year"
-          />
-          <q-select
-            style="width: 62%"
-            outlined
-            v-model="edu.start_date_month"
-            :options="monthsList"
-            label="Month"
-          />
-        </div>
-      </div>
-      <div style="width: 50%">
-        <div class="text-body1">To</div>
-        <div class="row justify-between items-center">
-          <q-select
-            style="width: 35%"
-            outlined
-            square
-            v-model="edu.end_date_year"
-            :options="yearsList"
-            label="Year"
-          />
-          <q-select
-            style="width: 62%"
-            outlined
-            v-model="edu.end_date_month"
-            :options="monthsList"
-            label="Month"
-          />
-        </div>
-      </div>
-      <div class="flex-center q-mt-lg">
-        <q-btn
-          outline
-          color="white"
-          text-color="black"
-          label="Discard Changes"
-          class="q-mr-md"
-          @click="onDiscardChangesEdu(index)"
-          unelevated
+      <q-form @submit.prevent.stop="onSaveChangesEdu(index)">
+        <q-select
+          style="width: 35%"
+          outlined
+          square
+          v-model="edu.level"
+          :options="levelOfEducationList"
+          label="Level of education"
+          :rules="[val => !!val || 'Select a level']" lazy-rules
         />
-        <q-btn color="primary" label="Save Changes" unelevated @click="onSaveChangesEdu(index)" />
-      </div>
+        <q-input outlined v-model="edu.field_of_study" label="Field of study" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+        <q-input outlined v-model="edu.school" label="School" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+        <div style="width: 50%">
+          <div class="text-body1">From</div>
+          <div class="row justify-between items-center">
+            <q-select
+              style="width: 35%"
+              outlined
+              square
+              v-model="edu.start_date_year"
+              :options="yearsList"
+              label="Year"
+              :rules="[val => !!val || 'Select an year']" lazy-rules
+            />
+            <q-select
+              style="width: 62%"
+              outlined
+              v-model="edu.start_date_month"
+              :options="monthsList"
+              label="Month"
+              :rules="[val => !!val || 'Select an month']" lazy-rules
+            />
+          </div>
+        </div>
+        <div style="width: 50%">
+          <div class="text-body1">To</div>
+          <div class="row justify-between items-center">
+            <q-select
+              style="width: 35%"
+              outlined
+              square
+              v-model="edu.end_date_year"
+              :options="yearsList"
+              label="Year"
+            />
+            <q-select
+              style="width: 62%"
+              outlined
+              v-model="edu.end_date_month"
+              :options="monthsList"
+              label="Month"
+            />
+            <div v-if="durationError" class="text-caption text-red">End date must be after start date</div>
+          </div>
+        </div>
+        <div class="flex-center q-mt-lg">
+          <q-btn
+            outline
+            color="white"
+            text-color="black"
+            label="Discard Changes"
+            class="q-mr-md"
+            @click="onDiscardChangesEdu(index)"
+            unelevated
+          />
+          <q-btn color="primary" label="Save Changes" unelevated type="submit" />
+        </div>
+      </q-form>
     </q-card>
   </template>
 </template>
@@ -102,6 +108,7 @@
 <script>
 import { mapStores } from 'pinia/dist/pinia.esm-browser';
 import { useResumeStore } from 'stores/resume';
+import {compareDesc, parse} from "date-fns";
 
 export default {
   name: 'ResumeEduSection',
@@ -261,6 +268,18 @@ export default {
         'PhD',
         'Other',
       ],
+      durationError: false,
+      selectRule: [
+        val => !!val || 'Select an year',
+        () => {
+          this.durationError = false;
+          return true;
+        }
+      ],
+      durationRule: [
+        val => !!val || 'Select a month',
+        this.validateDuration
+      ],
     };
   },
   computed: {
@@ -278,6 +297,10 @@ export default {
       await this.resumeStore.deleteResumeEdu(id);
     },
     async onSaveChangesEdu(index) {
+      if (!this.validateDuration(this.resumeStore.educations[index])) {
+        this.durationError = true;
+        return;
+      }
       this.resumeStore.educations[index - 1] = JSON.parse(
         JSON.stringify(this.resumeStore.educations[index])
       );
@@ -295,6 +318,31 @@ export default {
       this.resumeStore.educations[index].editing = false;
       this.resumeStore.educations[index - 1].editing = false;
     },
+    validateDuration(exp) {
+      const sYear = exp.start_date_year;
+      const sMonth = exp.start_date_month;
+      const eYear = exp.end_date_year;
+      const eMonth = exp.end_date_month;
+
+      if (sYear !== '' && sMonth !== '' && eYear !== '' && eMonth !== '') {
+        const startDate = parse(`${sYear} ${sMonth}`, 'yyyy MMMM', new Date());
+        const endDate = parse(`${eYear} ${eMonth}`, 'yyyy MMMM', new Date());
+
+        const compResult = compareDesc(startDate, endDate);
+        console.log(startDate, endDate);
+        console.log(compResult)
+        if (compResult <= 0) {
+          // this.durationError = true;
+          return false;
+        } else {
+          // this.durationError = false;
+          return true;
+        }
+      } else {
+        // this.durationError = false;
+        return false;
+      }
+    }
   },
 };
 </script>

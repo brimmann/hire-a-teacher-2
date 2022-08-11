@@ -1,5 +1,5 @@
 <template>
-  <q-list bordered separator style="height: 300px;">
+  <q-list bordered separator style="height: 350px;">
     <q-item v-for="(item, index) in visibleData" :key="index">
       <q-item-section>
         <div class="row justify-between items-center q-mr-sm">
@@ -44,7 +44,7 @@ export default {
       if(this.current === this.max) {
         return data.slice(start)
       }
-      const end = (start + 7) - 1;
+      const end = (start + 7);
       return data.slice(start, end);
     },
     max() {

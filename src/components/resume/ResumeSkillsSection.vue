@@ -3,6 +3,7 @@
     <div v-for="(skill, index) in resumeStore.skills" :key="index">
       <q-card-section class="row q-pt-sm items-center q-pb-xs">
         <div class="text-subtitle1">
+          <q-tooltip anchor="center left" self="center middle"  :offset="[40, 0]">Click to edit</q-tooltip>
           {{ skill.skill }}
           <q-popup-edit
             square
@@ -15,12 +16,11 @@
               autofocus
               v-model="scope.value"
               :model-value="scope.value"
-              hint="Your nickname"
+              hint="Edit skill"
               :rules="[(val) => scope.validate(val) || 'More than 5 chars required']"
             >
               <template #after>
                 <q-btn flat dense color="negative" icon="cancel" @click.stop="scope.cancel" />
-
                 <q-btn
                   flat
                   dense

@@ -8,6 +8,16 @@ const routes = [
   },
   {
     path: '/auth',
+    beforeEnter: () => {
+      const user = useUserStore();
+      if (user.userType === 'teacher') {
+        return '/teacher';
+      } else if (user.userType === 'org') {
+        return '/org';
+      } else {
+        return true;
+      }
+    },
     component: () => import('layouts/AuthLayout.vue'),
     children: [
       { path: 'login', component: () => import('pages/LoginForm') },

@@ -3,87 +3,97 @@
     flat
     bordered
     class="q-mb-md q-pa-lg max-width column"
-    style="width: 100%; gap: 16px"
+    style="width: 100%;"
   >
-    <q-input outlined v-model="exp.title" label="Title" />
-    <q-input outlined v-model="exp.org" label="Organization" />
-    <div style="width: 50%">
-      <div class="text-body1">From</div>
-      <div class="row justify-between items-center">
-        <q-select
-          style="width: 35%"
-          outlined
-          square
-          v-model="exp.start_date_year"
-          :options="yearsList"
-          label="Year"
-        />
-        <q-select
-          style="width: 62%"
-          outlined
-          v-model="exp.start_date_month"
-          :options="monthsList"
-          label="Month"
-        />
+    <q-form @submit.prevent.stop="onSave" class="q-col-gutter-md">
+      <q-input outlined v-model="exp.title" label="Title" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+      <q-input outlined v-model="exp.org" label="Organization" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+      <div style="width: 50%">
+        <div class="text-body1">From</div>
+        <div class="row justify-between items-center">
+          <q-select
+            style="width: 35%"
+            outlined
+            square
+            v-model="exp.start_date_year"
+            :options="yearsList"
+            label="Year"
+            :rules="[val => !!val || 'Select an year']" lazy-rules
+          />
+          <q-select
+            style="width: 62%"
+            outlined
+            v-model="exp.start_date_month"
+            :options="monthsList"
+            label="Month"
+            :rules="[val => !!val || 'Select a month']" lazy-rules
+          />
+        </div>
       </div>
-    </div>
-    <div style="width: 50%">
-      <div class="text-body1">To</div>
-      <div class="row justify-between items-center">
-        <q-select
-          style="width: 35%"
-          outlined
-          square
-          v-model="exp.end_date_year"
-          :options="yearsList"
-          label="Year"
-        />
-        <q-select
-          style="width: 62%"
-          outlined
-          v-model="exp.end_date_month"
-          :options="monthsList"
-          label="Month"
-        />
+      <div style="width: 50%">
+        <div class="text-body1">To</div>
+        <div class="row justify-between items-center">
+          <q-select
+            style="width: 35%"
+            outlined
+            square
+            v-model="exp.end_date_year"
+            :options="yearsList"
+            label="Year"
+            :rules="selectRule" lazy-rules
+          />
+          <q-select
+            style="width: 62%"
+            outlined
+            v-model="exp.end_date_month"
+            :options="monthsList"
+            label="Month"
+            :rules="selectRule" lazy-rules
+          />
+          <div v-if="durationError" class="text-caption text-red">End date must be after start date</div>
+        </div>
       </div>
-    </div>
-    <div>
-      <q-editor
-        square
-        v-model="exp.description"
-        :definitions="{
+      <div>
+        <q-editor
+          square
+          v-model="exp.description"
+          placeholder="Describe your position and any significant accomplishments here"
+          :definitions="{
                 bold: { label: 'Bold', icon: null, tip: 'My bold tooltip' },
               }"
-        :toolbar="[
+          :toolbar="[
                 ['unordered', 'ordered'],
 
                 ['undo', 'redo'],
               ]"
-      />
-    </div>
-    <div class="flex-center">
-      <q-btn
-        outline
-        color="white"
-        text-color="black"
-        label="Discard"
-        class="q-mr-md"
-        @click="onDiscard"
-        unelevated
-      />
-      <q-btn
-        color="primary"
-        label="Save"
-        unelevated
-        @click="onSave"
-      />
-    </div>
+        />
+      </div>
+      <div v-if="exp.description === ''" class="text-caption text-grey">* Experience description required</div>
+      <div class="flex-center">
+        <q-btn
+          outline
+          color="white"
+          text-color="black"
+          label="Discard"
+          class="q-mr-md"
+          @click="onDiscard"
+          unelevated
+        />
+        <q-btn
+          color="primary"
+          label="Save"
+          unelevated
+          type="submit"
+        />
+      </div>
+    </q-form>
   </q-card>
 </template>
 
 <script>
 import {mapStores} from "pinia/dist/pinia.esm-browser";
 import {useResumeStore} from "stores/resume";
+import { parse, compareDesc } from "date-fns"
 
 export default {
   name: "ResumeAddExp",
@@ -99,6 +109,18 @@ export default {
         end_date_year: '',
         description: '',
       },
+      durationError: false,
+      selectRule: [
+        val => !!val || 'Select an year',
+        () => {
+        this.durationError = false;
+        return true;
+        }
+      ],
+      durationRule: [
+        val => !!val || 'Select a month',
+        this.validateDuration
+      ],
       yearsList: [
         '2022',
         '2021',
@@ -245,6 +267,13 @@ export default {
   },
   methods: {
     async onSave() {
+      if (!this.validateDuration()) {
+        this.durationError = true;
+        return;
+      }
+      if (this.exp.description === '') {
+        return;
+      }
       this.resumeStore.experiences.push(this.exp);
       this.resumeStore.experiences.push(this.exp);
       await this.resumeStore.createResumeExp(this.exp);
@@ -271,6 +300,31 @@ export default {
         end_date_month: '',
         end_date_year: '',
         description: '',
+      }
+    },
+    validateDuration() {
+      const sYear = this.exp.start_date_year;
+      const sMonth = this.exp.start_date_month;
+      const eYear = this.exp.end_date_year;
+      const eMonth = this.exp.end_date_month;
+
+      if (sYear !== '' && sMonth !== '' && eYear !== '' && eMonth !== '') {
+        const startDate = parse(`${sYear} ${sMonth}`, 'yyyy MMMM', new Date());
+        const endDate = parse(`${eYear} ${eMonth}`, 'yyyy MMMM', new Date());
+
+        const compResult = compareDesc(startDate, endDate);
+        console.log(startDate, endDate);
+        console.log(compResult)
+        if (compResult <= 0) {
+          // this.durationError = true;
+          return false;
+        } else {
+          // this.durationError = false;
+          return true;
+        }
+      } else {
+        // this.durationError = false;
+        return false;
       }
     }
   }

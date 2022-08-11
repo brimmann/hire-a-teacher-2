@@ -237,7 +237,11 @@ export default {
     },
     logout() {
       this.$router.push('/');
-      this.userStore.logout();
+
+      const timeOut = setTimeout(() => {
+        this.userStore.logout();
+        clearTimeout(timeOut);
+      }, 100)
     }
   },
 };

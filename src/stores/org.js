@@ -53,7 +53,7 @@ export const useOrgStore = defineStore('org', {
           },
         });
       } catch (e) {
-        console.log('create-job-error', e.message);
+        console.log('create-job-error', e);
       }
     },
     async updateJob(payload, jobIndex) {
@@ -84,7 +84,9 @@ export const useOrgStore = defineStore('org', {
       console.log('loaded jobs', response.data);
       this.jobs = [];
       response.data.forEach((item) => {
-        item.tags = item.tags.split(',');
+        if (item.tags !== '') {
+          item.tags = item.tags.split(',');
+        }
         this.jobs.push(item);
       });
     },

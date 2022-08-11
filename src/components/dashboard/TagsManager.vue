@@ -8,12 +8,14 @@
       class="q-mb-md"
       maxlength="24"
       mask="XXXXXXXXXXXXXXXXXXXXXXXX"
+      :error="emptyTage"
+      error-message="Cannot add empty tag"
     >
       <template #hint>
         <span id="hint-span">Maximum 5 tags allowed without space and symbols</span>
       </template>
 
-      <template #append>
+      <template #append v-if="!emptyTage">
         <q-icon name="info" class="cursor-pointer" color="primary">
           <q-tooltip anchor="bottom middle" self="top middle" :offset="[10, 10]">
             Tags are simple pieces of data that describe information on a document, web<br />
@@ -64,10 +66,19 @@ export default {
     return {
       tags: [],
       tagInputModel: '',
+      emptyTage: false
     };
   },
   methods: {
     addTag() {
+      if (this.tagInputModel === ''){
+        this.emptyTage = true;
+        const timeOut = setTimeout(() => {
+          this.emptyTage = false;
+          clearInterval(timeOut);
+        }, 2000);
+        return;
+      }
       if (this.tags.length < 5) {
         this.tags.push(this.tagInputModel);
         this.tagInputModel = '';
@@ -78,7 +89,8 @@ export default {
     removeTag(index) {
       this.tags.splice(index, 1)
       this.$emit('update:modelValue', JSON.parse(JSON.stringify(this.tags)))
-    }
+    },
+
   },
   mounted() {
     console.log('in', this.modelValue);

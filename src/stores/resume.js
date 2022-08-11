@@ -94,7 +94,7 @@ export const useResumeStore = defineStore('resume', {
         start_date_month: payload.start_date_month,
         start_date_year: payload.start_date_year,
         end_date_month: payload.end_date_month,
-        end_date_year: payload.endDataYear,
+        end_date_year: payload.end_date_year,
         description: payload.description,
         resume: user.userId,
       };
@@ -120,7 +120,7 @@ export const useResumeStore = defineStore('resume', {
         start_date_month: payload.start_date_month,
         start_date_year: payload.start_date_year,
         end_date_month: payload.end_date_month,
-        end_date_year: payload.endDataYear,
+        end_date_year: payload.end_date_year,
         description: payload.description,
         resume: user.userId,
       };

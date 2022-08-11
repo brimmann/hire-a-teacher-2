@@ -232,32 +232,43 @@ export default {
   },
   methods: {
     async regTeacher() {
+      if(!navigator.onLine) {
+        this.userStore.notifyError("No internet connection");
+        return;
+      }
       try {
         this.registering = true;
         await this.userStore.registerTeacher(this.teacherRegData);
         this.registering = false;
         await this.$router.push({name: "resume"});
       } catch (e) {
-        if(e.response.data.email[0] === "A user is already registered with this e-mail address.") {
-          this.userStore.notifyError("User with this email already exist");
-        } else {
-          this.userStore.notifyError("Internal error")
+        if(e.response !== undefined) {
+          if(e.response.data.email[0] === "A user is already registered with this e-mail address.") {
+            this.userStore.notifyError("User with this email already exist");
+          } else {
+            this.userStore.notifyError("Internal error")
+          }
         }
         this.registering = false;
-        console.log(e.response);
       }
     },
     async regOrg() {
+      if(!navigator.onLine) {
+        this.userStore.notifyError("No internet connection");
+        return;
+      }
       try {
         this.registering = true;
         await this.userStore.registerOrg(this.orgRegData);
         await this.$router.push({name: "dashboard"});
         this.registering = false;
       } catch (e) {
-        if(e.response.data.email[0] === "A user is already registered with this e-mail address.") {
-          this.userStore.notifyError("User with this email already exist");
-        } else {
-          this.userStore.notifyError("Internal error")
+        if (e.response !== undefined) {
+          if(e.response.data.email[0] === "A user is already registered with this e-mail address.") {
+            this.userStore.notifyError("User with this email already exist");
+          } else {
+            this.userStore.notifyError("Internal error")
+          }
         }
         this.registering = false;
         console.log(e.response);

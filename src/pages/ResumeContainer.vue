@@ -1,5 +1,11 @@
 <template>
-  <component :is="currentComponent">Loading your resume, please wait...</component>
+  <waiting-resume v-if="resumeStore.resumeLoading">Loading your resume, please wait...</waiting-resume>
+  <template v-else>
+    <building-resume v-if="resumeStore.noResume && !resumeStore.adding.resume"/>
+    <resume-page v-else/>
+
+  </template>
+<!--  <component :is="currentComponent">Loading your resume, please wait...</component>-->
 </template>
 
 <script>

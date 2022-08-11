@@ -19,31 +19,34 @@
         class="q-mb-md q-pa-lg max-width column"
         style="width: 100%; gap: 16px"
       >
-        <q-input outlined v-model="lang.language" label="Field of study" />
-        <q-select
-          outlined
-          square
-          v-model="lang.level_of_fluency"
-          :options="langLevelList"
-          label="Level of fluency"
-        />
-        <div class="flex-center">
-          <q-btn
-            outline
-            color="white"
-            text-color="black"
-            label="Discard Changes"
-            class="q-mr-md"
-            @click="onDiscardChangesLang(index)"
-            unelevated
+        <q-form @submit.prevent.stop="onSaveChangesLang(index)" class="q-col-gutter-sm">
+          <q-input outlined v-model="lang.language" label="Field of study" :rules="[val => !!val || 'Cannot be empty']" lazy-rules />
+          <q-select
+            outlined
+            square
+            v-model="lang.level_of_fluency"
+            :options="langLevelList"
+            label="Level of fluency"
+            :rules="[val => !!val || 'Select an level']" lazy-rules
           />
-          <q-btn
-            color="primary"
-            label="Save Changes"
-            unelevated
-            @click="onSaveChangesLang(index)"
-          />
-        </div>
+          <div class="flex-center">
+            <q-btn
+              outline
+              color="white"
+              text-color="black"
+              label="Discard Changes"
+              class="q-mr-md"
+              @click="onDiscardChangesLang(index)"
+              unelevated
+            />
+            <q-btn
+              color="primary"
+              label="Save Changes"
+              unelevated
+              type="submit"
+            />
+          </div>
+        </q-form>
       </div>
     </template>
   </q-card>

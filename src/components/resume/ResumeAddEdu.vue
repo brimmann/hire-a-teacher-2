@@ -6,74 +6,83 @@
     style="width: 100%; gap: 16px"
     v-if="resumeStore.adding.newEdu"
   >
-    <q-select
-      style="width: 35%"
-      outlined
-      square
-      v-model="edu.level"
-      :options="levelOfEducationList"
-      label="Level of education"
-    />
-    <q-input outlined v-model="edu.field_of_study" label="Field of study" />
-    <q-input outlined v-model="edu.school" label="School" />
-    <div style="width: 50%">
-      <div class="text-body1">From</div>
-      <div class="row justify-between items-center">
-        <q-select
-          style="width: 35%"
-          outlined
-          square
-          v-model="edu.start_date_year"
-          :options="yearsList"
-          label="Year"
-        />
-        <q-select
-          style="width: 62%"
-          outlined
-          v-model="edu.start_date_month"
-          :options="monthsList"
-          label="Month"
-        />
-      </div>
-    </div>
-    <div style="width: 50%">
-      <div class="text-body1">To</div>
-      <div class="row justify-between items-center">
-        <q-select
-          style="width: 35%"
-          outlined
-          square
-          v-model="edu.end_date_year"
-          :options="yearsList"
-          label="Year"
-        />
-        <q-select
-          style="width: 62%"
-          outlined
-          v-model="edu.end_date_month"
-          :options="monthsList"
-          label="Month"
-        />
-      </div>
-    </div>
-    <div class="flex-center q-mt-lg">
-      <q-btn
-        outline
-        color="white"
-        text-color="black"
-        label="Discard"
-        class="q-mr-md"
-        @click="onDiscard"
-        unelevated
+    <q-form @submit.prevent.stop="onSave" class="q-col-gutter-md">
+      <q-select
+        style="width: 35%"
+        outlined
+        square
+        v-model="edu.level"
+        :options="levelOfEducationList"
+        label="Level of education"
+        :rules="[val => !!val || 'Select a level']" lazy-rules
       />
-      <q-btn color="primary" label="Save" unelevated @click="onSave" />
-    </div>
+      <q-input outlined v-model="edu.field_of_study" label="Field of study" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+      <q-input outlined v-model="edu.school" label="School" :rules="[val => !!val || 'Cannot be empty']" lazy-rules/>
+      <div style="width: 50%">
+        <div class="text-body1">From</div>
+        <div class="row justify-between items-center">
+          <q-select
+            style="width: 35%"
+            outlined
+            square
+            v-model="edu.start_date_year"
+            :options="yearsList"
+            label="Year"
+            :rules="[val => !!val || 'Select an year']" lazy-rules
+          />
+          <q-select
+            style="width: 62%"
+            outlined
+            v-model="edu.start_date_month"
+            :options="monthsList"
+            label="Month"
+            :rules="[val => !!val || 'Select an month']" lazy-rules
+          />
+        </div>
+      </div>
+      <div style="width: 50%">
+        <div class="text-body1">To</div>
+        <div class="row justify-between items-center">
+          <q-select
+            style="width: 35%"
+            outlined
+            square
+            v-model="edu.end_date_year"
+            :options="yearsList"
+            label="Year"
+            :rules="selectRule" lazy-rules
+          />
+          <q-select
+            style="width: 62%"
+            outlined
+            v-model="edu.end_date_month"
+            :options="monthsList"
+            label="Month"
+            :rules="selectRule" lazy-rules
+          />
+          <div v-if="durationError" class="text-caption text-red">End date must be after start date</div>
+        </div>
+      </div>
+      <div class="flex-center q-mt-lg">
+        <q-btn
+          outline
+          color="white"
+          text-color="black"
+          label="Discard"
+          class="q-mr-md"
+          @click="onDiscard"
+          unelevated
+        />
+        <q-btn color="primary" label="Save" unelevated type="submit"/>
+      </div>
+    </q-form>
   </q-card>
 </template>
 
 <script>
 import {mapStores} from "pinia/dist/pinia.esm-browser";
 import {useResumeStore} from "stores/resume";
+import {compareDesc, parse} from "date-fns";
 
 export default {
   name: "ResumeAddEdu",
@@ -90,6 +99,18 @@ export default {
         end_date_month: '',
         end_date_year: '',
       },
+      durationError: false,
+      selectRule: [
+        val => !!val || 'Select an year',
+        () => {
+          this.durationError = false;
+          return true;
+        }
+      ],
+      durationRule: [
+        val => !!val || 'Select a month',
+        this.validateDuration
+      ],
       yearsList: [
         '2022',
         '2021',
@@ -244,6 +265,10 @@ export default {
   },
   methods: {
     async onSave() {
+      if (!this.validateDuration()) {
+        this.durationError = true;
+        return;
+      }
       this.resumeStore.educations.push(this.edu);
       this.resumeStore.educations.push(this.edu);
       await this.resumeStore.createResumeEdu(this.edu);
@@ -272,6 +297,31 @@ export default {
         start_date_year: '',
         end_date_month: '',
         end_date_year: '',
+      }
+    },
+    validateDuration() {
+      const sYear = this.edu.start_date_year;
+      const sMonth = this.edu.start_date_month;
+      const eYear = this.edu.end_date_year;
+      const eMonth = this.edu.end_date_month;
+
+      if (sYear !== '' && sMonth !== '' && eYear !== '' && eMonth !== '') {
+        const startDate = parse(`${sYear} ${sMonth}`, 'yyyy MMMM', new Date());
+        const endDate = parse(`${eYear} ${eMonth}`, 'yyyy MMMM', new Date());
+
+        const compResult = compareDesc(startDate, endDate);
+        console.log(startDate, endDate);
+        console.log(compResult)
+        if (compResult <= 0) {
+          // this.durationError = true;
+          return false;
+        } else {
+          // this.durationError = false;
+          return true;
+        }
+      } else {
+        // this.durationError = false;
+        return false;
       }
     }
   }

@@ -12,7 +12,8 @@
             label="Email Address"
             maxlength="500"
             style="width: 300px"
-            :rules="requiredRules"
+            :rules="emailRules"
+            lazy-rules
           />
           <q-input
             outlined
@@ -53,7 +54,6 @@
               label="Login"
               type="submit"
               style="width: 100%"
-              @click="login"
               :loading="loggingIn"
             >
               <template #loading>
@@ -80,6 +80,10 @@ export default {
       email: '',
       password: '',
       requiredRules: [(val) => !!val || 'Field is required'],
+      emailRules: [
+        (val) => !!val || "Field is required",
+        (val) => val.includes("@") || "Invalid email",
+      ],
       loggingIn: false,
     };
   },
@@ -88,6 +92,10 @@ export default {
   },
   methods: {
     async login() {
+      if(!navigator.onLine) {
+        this.userStore.notifyError("No internet connection");
+        return;
+      }
       try {
         this.loggingIn = true;
         await this.userStore.login({
@@ -103,6 +111,13 @@ export default {
         }
       } catch (e) {
         this.loggingIn = false;
+        if (e.response !== undefined) {
+          if(e.response.data.detail === 'Authentication credentials were not provided.') {
+            this.userStore.notifyError("Invalid email, password or user type")
+          } else {
+            this.userStore.notifyError("Internal error")
+          }
+        }
         console.log(e.response)
       }
     },

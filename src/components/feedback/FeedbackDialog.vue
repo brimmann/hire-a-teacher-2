@@ -67,7 +67,7 @@
             readonly
           />
           <q-stepper-navigation>
-            <q-btn color="primary" label="Finish" @click="feedback = false" />
+            <q-btn color="primary" label="Done" @click="feedback = false" />
           </q-stepper-navigation>
         </q-step>
       </q-stepper>
@@ -98,6 +98,7 @@ export default {
       await this.commonStore.submitRating(this.ratingModel);
       this.step = 3
       this.commonStore.submittingToken = null;
+      this.token = null;
     },
     async startFeedback() {
       await this.commonStore.get_info({token: this.token})

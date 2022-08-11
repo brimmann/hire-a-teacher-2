@@ -1,37 +1,69 @@
 <template>
-  <q-card
-    flat
-    class="max-width q-mb-md q-col-gutter-md"
-    style="width: 100%"
-  >
-    <q-input outlined v-model="introBuffer.fullName" label="Full Name" />
-    <q-input outlined v-model="introBuffer.headline" label="Title" />
-    <q-input outlined v-model="introBuffer.phoneNumber" label="Phone Number" />
-    <q-input outlined v-model="introBuffer.emailAddress" label="Email Address" />
-    <q-input outlined v-model="introBuffer.address" label="Address" />
-    <q-input outlined type="textarea" v-model="introBuffer.brief" label="Brief" />
-    <div class="flex-center">
-      <q-btn
-        outline
-        color="white"
-        text-color="black"
-        label="Cancel"
-        class="q-mr-md"
-        @click="onCancel"
-        unelevated
+  <q-card flat class="max-width q-mb-md" style="width: 100%">
+    <q-form class="full-width q-col-gutter-md" @submit.prevent.stop="onSave">
+      <q-input outlined v-model="introBuffer.fullName" label="Full Name" />
+      <q-input
+        outlined
+        v-model="introBuffer.headline"
+        label="Title"
+        :rules="validationRules.title"
+        lazy-rules
       />
-      <q-btn color="primary" label="Save" unelevated @click="onSave" />
-    </div>
+      <q-input outlined v-model="introBuffer.phoneNumber" label="Phone Number" />
+      <q-input
+        outlined
+        v-model="introBuffer.emailAddress"
+        label="Email Address"
+        :rules="validationRules.email"
+        lazy-rules
+      />
+      <q-input
+        outlined
+        v-model="introBuffer.address"
+        label="Address"
+        :rules="validationRules.address"
+        lazy-rules
+      />
+      <q-input
+        outlined
+        type="textarea"
+        v-model="introBuffer.brief"
+        :rules="validationRules.description"
+        lazy-rules
+        input-style="resize: none"
+        class="full-width"
+        bottom-slots
+        label="Brief"
+      >
+        <template #counter>
+          <div class="row justify-end">
+            <div>{{ introBuffer.brief !== undefined ? introBuffer.brief.length : 0 }} Character</div>
+          </div>
+        </template>
+      </q-input>
+      <div class="flex-center">
+        <q-btn
+          outline
+          color="white"
+          text-color="black"
+          label="Cancel"
+          class="q-mr-md"
+          @click="onCancel"
+          unelevated
+        />
+        <q-btn color="primary" label="Save" unelevated type="submit" />
+      </div>
+    </q-form>
     <q-space />
   </q-card>
 </template>
 
 <script>
-import {mapStores} from "pinia/dist/pinia.esm-browser";
-import {useResumeStore} from "stores/resume";
+import { mapStores } from 'pinia/dist/pinia.esm-browser';
+import { useResumeStore } from 'stores/resume';
 
 export default {
-  name: "ResumeAdding",
+  name: 'ResumeAdding',
   data() {
     return {
       introBuffer: {
@@ -41,7 +73,19 @@ export default {
         phoneNumber: '',
         emailAddress: '',
         address: '',
-        brief:''
+        brief: '',
+      },
+      validationRules: {
+        title: [(val) => !!val || 'Cannot be empty'],
+        email: [(val) => !!val || 'Cannot be empty', (val) => val.includes('@') || 'Invalid email'],
+        address: [
+          (val) => !!val || 'Cannot be empty',
+          (val) => val.length >= 16 || 'Address must be at least 24 characters',
+        ],
+        description: [
+          (val) => !!val || 'Cannot be empty',
+          (val) => val.length >= 150 || 'Description must be at least 150 characters',
+        ],
       },
     };
   },
@@ -59,11 +103,11 @@ export default {
           heading: this.introBuffer.headline,
           address: this.introBuffer.address,
           brief: this.introBuffer.brief,
-          email: this.introBuffer.emailAddress
+          email: this.introBuffer.emailAddress,
         });
         this.resumeStore.noResume = false;
       } catch (e) {
-        console.log("error here:", e);
+        console.log('error here:', e);
       }
     },
     onCancel() {
@@ -75,9 +119,7 @@ export default {
   mounted() {
     this.introBuffer = JSON.parse(JSON.stringify(this.resumeStore.intro));
   },
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

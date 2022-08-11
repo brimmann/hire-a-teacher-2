@@ -4,16 +4,16 @@
       <q-toolbar>
         <template v-if="$q.screen.width > 675 && headerTitle">
           <q-icon :name="headerTitle.icon" size="1.5rem" />
-          <q-toolbar-title>{{ headerTitle.text }}</q-toolbar-title>
+          <q-toolbar-title>{{ headerTitle.text }} <span v-if="subtitle !== null" class="text-body2 text-blue-3"> - {{ subtitle }}</span></q-toolbar-title>
         </template>
-        <q-btn
-          dense
-          flat
-          round
-          icon="menu"
-          @click="toggleLeftDrawer"
-          v-if="$q.platform.is.mobile || !leftDrawerOpen"
-        />
+<!--        <q-btn-->
+<!--          dense-->
+<!--          flat-->
+<!--          round-->
+<!--          icon="menu"-->
+<!--          @click="toggleLeftDrawer"-->
+<!--          v-if="$q.platform.is.mobile || !leftDrawerOpen"-->
+<!--        />-->
         <div
           v-if="$route.name === 't-search'"
           class="absolute-center row flex-center"
@@ -73,7 +73,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       :width="this.$q.screen.xs ? 250 : 300"
-      :breakpoint="1045"
+      :breakpoint="800"
     >
       <q-scroll-area
         style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd"
