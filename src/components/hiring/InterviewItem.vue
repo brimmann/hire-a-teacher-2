@@ -6,7 +6,7 @@
     <q-separator />
     <q-card-section class="q-mb-none">
       <div class="text-caption q-mb-sm">{{ job.exp_level }} - {{ job.type }}</div>
-      <div class="text-grey">{{ job.city }}</div>
+      <div class="text-grey">{{ job.city }} - {{ interview.org_name }}</div>
     </q-card-section>
     <q-separator inset/>
     <q-card-section>

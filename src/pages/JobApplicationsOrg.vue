@@ -55,9 +55,9 @@
             icon="location_on"
             :done="step > 2"
           >
-            <q-input square outlined style="width: 100%" v-model="address"/>
+            <q-input square outlined style="width: 100%" v-model="address" :error="addressError !== null" :error-message="addressError"/>
             <q-stepper-navigation>
-              <q-btn @click="step = 3" color="primary" label="Continue" />
+              <q-btn @click="gotoStep3()" color="primary" label="Continue" />
               <q-btn flat @click="step = 1" color="primary" label="Back" class="q-ml-sm" />
             </q-stepper-navigation>
           </q-step>
@@ -69,7 +69,7 @@
                   <q-separator vertical/>
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                      <q-date v-model="date" mask="YYYY-MM-DD HH:mm A">
+                      <q-date v-model="date" mask="YYYY-MM-DD HH:mm A" :options="optionsFn">
                         <div class="row items-center justify-end">
                           <q-btn v-close-popup label="Close" color="primary" flat />
                         </div>
@@ -143,6 +143,7 @@ import ResumePublicView from 'components/resume/ResumePublicView';
 import SingleJobItemOrg from 'components/job-applications/SingleJobItemOrg';
 import { mapStores } from 'pinia';
 import { useOrgStore } from 'stores/org';
+import {add, format} from "date-fns";
 export default {
   name: 'JobApplicationsOrg',
   components: { SingleJobItemOrg, ResumePublicView, JobBasedOrgAppsView, MainOrgAppsView },
@@ -153,9 +154,10 @@ export default {
       viewingResumeId: null,
       accept: false,
       step: 1,
-      date: '2022-08-01 12:44 PM',
+      date: this.getTomorrow(),
       address: "",
-      viewIngApplication: null
+      viewIngApplication: null,
+      addressError: null
     };
   },
   computed: {
@@ -183,8 +185,44 @@ export default {
       await this.orgStore.accept(payload)
       this.accept = false;
       this.status = this.previousStatus;
+    },
+    optionsFn (date) {
+      const today = format(Date.now(), 'yyyy/MM/dd' );
+      return date > today;
+    },
+    getTomorrow() {
+      // const todayDate = new Date();
+      // const year = todayDate.getFullYear();
+      // let month = (todayDate.getMonth() + 1).toString();
+      // let day = todayDate.getDate().toString();
+      // month = month.length > 1 ? month : '0' + month;
+      // day = day.length > 1 ? day : '0' + day;
+      // return year + '/' + month + '/' + day;
+      return format(add(Date.now(), {
+        days: 1
+      }), 'yyyy-MM-dd') + ' 01:30 PM';
+    },
+    gotoStep3() {
+      if (this.address === "") {
+        this.addressError = "Cannot be empty";
+        const timeout = setTimeout(() => {
+          this.addressError = null;
+          clearTimeout(timeout);
+        }, 2000);
+      } else if (this.address.length <= 32) {
+        this.addressError = "Address must be at least 32 characters long";
+        const timeout = setTimeout(() => {
+          this.addressError = null;
+          clearTimeout(timeout);
+        }, 2000);
+      } else {
+        this.step = 3;
+      }
     }
   },
+  mounted() {
+    console.log(this.date)
+  }
 };
 </script>
 

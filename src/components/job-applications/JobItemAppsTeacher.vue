@@ -14,7 +14,7 @@
       <div class="text-caption q-mb-sm">
         {{ application.exp_level }} - {{ application.type }} - Posted {{ postTime }}
       </div>
-      <div class="text-grey">{{ application.city }}</div>
+      <div class="text-grey">{{ application.city }} - {{ application.org_name}}</div>
       <div class="text-grey">Expires on July 22</div>
     </q-card-section>
     <q-separator inset />

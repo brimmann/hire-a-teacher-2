@@ -108,7 +108,7 @@
       :breakpoint="1024"
     >
       <q-scroll-area
-        style="height: calc(100% - 200px); margin-top: 200px; border-right: 1px solid #ddd"
+        style="height: calc(100% - 220px); margin-top: 220px; border-right: 1px solid #ddd"
       >
         <q-list padding>
           <q-item clickable v-ripple to="/teacher/search" exact>
@@ -152,7 +152,7 @@
         </q-list>
       </q-scroll-area>
 
-      <q-img class="absolute-top" src="../assets/background-mat-1.jpg" style="height: 200px">
+      <q-img class="absolute-top" src="../assets/background-mat-1.jpg" style="height: 220px">
 
         <div class="absolute-bottom bg-transparent">
           <div
@@ -162,9 +162,8 @@
             <div>{{ avatar }}</div>
           </div>
           <div class="text-weight-bold q-pa-xs">{{ userStore.userDetails.full_name }}</div>
-          <q-chip outline square dense color="white" text-color="white" icon="star"> 4.7 </q-chip>
-          <q-chip outline square dense color="white" label="Hired" text-color="white" icon="check">
-          </q-chip>
+          <div class="text-subtitle2 q-pl-xs">{{ resumeStore.intro.headline}}</div>
+          <q-chip outline square dense color="yellow" icon="star"> {{ rating }} </q-chip>
         </div>
       </q-img>
     </q-drawer>
@@ -200,6 +199,9 @@ export default {
       } else {
         return fullName[0] + fullName[1];
       }
+    },
+    rating() {
+      return this.resumeStore.intro.ranking;
     },
     headerTitle() {
       switch (this.$route.name) {
@@ -241,9 +243,12 @@ export default {
       const timeOut = setTimeout(() => {
         this.userStore.logout();
         clearTimeout(timeOut);
-      }, 100)
+      }, 300)
     }
   },
+  mounted() {
+    this.resumeStore.getResume();
+  }
 };
 </script>
 

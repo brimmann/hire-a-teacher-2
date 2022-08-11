@@ -29,7 +29,7 @@
               To continue the selection process please agree to the following terms:
               <ul>
                 <li class="q-mb-sm">
-                  The employer is responsible to obey National Labour Law Profile, Islamic Republic
+                  The employer is responsible to obey National Labour Law of Islamic Republic
                   of Pakistan and provide all the rights to the applicant that are applicable.
                 </li>
                 <li>

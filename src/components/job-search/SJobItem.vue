@@ -7,7 +7,7 @@
     <q-separator />
     <q-card-section class="q-mb-none">
       <div class="text-caption q-mb-sm">{{ job.exp_level }} - {{ job.type }} - Posted {{ postTime }}</div>
-      <div class="text-grey">{{ job.city }}</div>
+      <div class="text-grey">{{ job.city }} - {{ job.org_name }}</div>
       <div class="text-grey">Expires on July 22</div>
     </q-card-section>
     <q-separator inset/>

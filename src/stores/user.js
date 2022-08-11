@@ -3,6 +3,7 @@ import axios from 'axios';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
 import { useResumeStore } from 'stores/resume';
+import { useOrgStore } from 'stores/org';
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -160,6 +161,8 @@ export const useUserStore = defineStore('user', {
     logout() {
       const resume = useResumeStore();
       resume.$reset();
+      const org = useOrgStore();
+      org.$reset();
       this.token = null;
       this.userId = null;
       this.userDetails = null;

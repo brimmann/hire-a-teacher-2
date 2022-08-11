@@ -132,9 +132,9 @@
             class="bg-grey-1 text-black text-h4 text-center row flex-center"
             style="border-radius: 50%; height: 100px; width: 100px"
           >
-            <div>OR</div>
+            <div>{{ avatar }}</div>
           </div>
-          <div class="text-weight-bold q-pa-xs q-mt-sm">Internation Islamic University</div>
+          <div class="text-weight-bold q-pa-xs q-mt-sm">{{ userStore.userDetails.org_name }}</div>
         </div>
       </q-img>
     </q-drawer>
@@ -161,6 +161,15 @@ export default {
   },
   computed: {
     ...mapStores(useOrgStore, useUserStore),
+    avatar() {
+      const fullName = this.userStore.userDetails.org_name;
+      const index = fullName.indexOf(' ');
+      if (index !== -1) {
+        return fullName[0] + fullName[index + 1];
+      } else {
+        return fullName[0] + fullName[1];
+      }
+    },
     subtitle() {
       if (this.orgStore.determiners.dashboardState === 'adding') {
         return 'Adding a new job';
