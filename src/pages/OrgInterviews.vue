@@ -13,6 +13,7 @@
         :key="index"
         @view-resume="viewResume"
         @select-app="getInterview(interview.interview, interviewIndex)"
+        @reject-app="rejectApplicant(interview.interview, index)"
       />
     </div>
     <q-dialog v-model="selectApplicant" persistent>
@@ -187,6 +188,18 @@ export default {
         console.log('selecting-error', e.message);
       }
     },
+    rejectApplicant(interview, index){
+      this.$q.dialog({
+        title: 'Rejecting applicant',
+        message: 'Do you want reject the applicant?',
+        ok: "Yes",
+        cancel: "No",
+        persistent: true
+      }).onOk(async () => {
+        await this.orgStore.cancelInterview(interview.id);
+        this.orgStore.interviews.splice(index, 1);
+      })
+    }
   },
   created() {
     this.orgStore.getInterviews();

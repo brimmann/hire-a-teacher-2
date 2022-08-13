@@ -161,6 +161,23 @@ export const useOrgStore = defineStore('org', {
         },
       });
     },
+    async rejectApplication(payload) {
+      const user = useUserStore();
+      console.log(payload);
+      await api.delete('/api/v1/jobs/apps_withdraw/' + payload, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+    },
+    async cancelInterview(payload) {
+      const user = useUserStore();
+      const response = await api.delete('/api/v1/jobs/interviews_delete?id=' + payload, {
+        headers: {
+          Authorization: 'Token ' + user.token,
+        },
+      });
+    },
     async getTokens() {
       const user = useUserStore();
       const response = await api.get('/api/v1/feeback/get_tokens', {

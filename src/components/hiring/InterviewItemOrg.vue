@@ -51,7 +51,7 @@
         padding="sm lg"
         label="Reject applicant"
         unelevated
-        @click="applyForJob"
+        @click="$emit('reject-app')"
       />
       <q-btn no-caps padding="sm lg" color="primary" label="Select applicant" unelevated @click="$emit('select-app')"/>
       <q-space />
@@ -85,7 +85,7 @@ import { format } from 'date-fns';
 
 export default {
   name: 'InterviewItemOrg',
-  emits: ['view-resume', 'select-app'],
+  emits: ['view-resume', 'select-app', "reject-app"],
   props: {
     job: {
       type: Object,

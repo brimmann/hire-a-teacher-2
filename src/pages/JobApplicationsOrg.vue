@@ -115,7 +115,7 @@
         label="Accept application"
         @click="accept = true"
       />
-      <q-btn unelevated no-caps color="red" icon-right="close" label="Reject application" />
+      <q-btn unelevated no-caps color="red" icon-right="close" label="Reject application" @click="rejectApplication" />
     </div>
     <div class="full-width q-mb-lg" style="max-width: 800px">
       <single-job-item-org :job="orgStore.viewingJob" />
@@ -218,6 +218,18 @@ export default {
       } else {
         this.step = 3;
       }
+    },
+    rejectApplication(){
+      this.$q.dialog({
+        title: 'Rejecting application',
+        message: 'Do you want reject the application?',
+        ok: "Yes",
+        cancel: "No",
+        persistent: true
+      }).onOk(async () => {
+        await this.orgStore.rejectApplication(this.viewIngApplication.app.id);
+        this.status = "main";
+      })
     }
   },
   mounted() {
