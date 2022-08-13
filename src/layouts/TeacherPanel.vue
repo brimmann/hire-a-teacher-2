@@ -2,7 +2,7 @@
   <q-layout view="lhh LpR lFf">
     <q-header
       class="bg-primary text-white"
-      v-if="resumeStore.adding.resume || !resumeStore.noResume || !($route.name === 'resume')"
+
     >
       <q-toolbar>
         <q-btn
@@ -14,7 +14,7 @@
           v-if="$q.platform.is.mobile || !leftDrawerOpen"
         />
 
-        <template v-if="$q.screen.width > 675 && headerTitle">
+        <template v-if="$q.screen.width > 1024 && headerTitle">
           <q-icon :name="headerTitle.icon" size="1.5rem" />
           <q-toolbar-title>{{ headerTitle.text }}</q-toolbar-title>
         </template>
@@ -59,45 +59,48 @@
           />
         </div>
         <q-space />
-        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
-        <q-btn
-          stretch
-          flat
-          label="Print"
-          icon="print"
-          no-caps
-          v-if="$route.name === 'resume' && $q.screen.width > 675"
-        />
-        <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
-        <q-btn
-          stretch
-          flat
-          label="Download PDF"
-          icon="download"
-          no-caps
-          v-if="$route.name === 'resume' && $q.screen.width > 675"
-        />
-        <q-btn-dropdown
-          flat
-          padding="0"
-          no-caps
-          dropdown-icon="more_vert"
-          @click="onMainClick"
-          :menu-offset="[11, 13]"
-          unelevated
-          content-style="border-radius: 0px;"
-          auto-close
-          v-if="$q.screen.width < 675"
-        >
-          <q-list separator>
-            <q-item clickable v-close-popup @click="onItemClick">
-              <q-btn stretch flat label="Download PDF" icon="download" no-caps />
-            </q-item>
-            <q-item clickable v-close-popup @click="onItemClick">
-              <q-btn stretch flat label="Print" icon="print" no-caps />
-            </q-item>
-          </q-list>
-        </q-btn-dropdown>
+        <template v-if="resumeStore.adding.resume || !resumeStore.noResume || !($route.name === 'resume')">
+          <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
+          <q-btn
+            stretch
+            flat
+            label="Print"
+            icon="print"
+            no-caps
+            v-if="$route.name === 'resume' && $q.screen.width > 675"
+          />
+          <q-separator dark vertical v-if="$route.name === 'resume' && $q.screen.width > 675" />
+          <q-btn
+            stretch
+            flat
+            label="Download PDF"
+            icon="download"
+            no-caps
+            v-if="$route.name === 'resume' && $q.screen.width > 675"
+          />
+          <q-btn-dropdown
+            flat
+            padding="0"
+            no-caps
+            dropdown-icon="more_vert"
+            @click="onMainClick"
+            :menu-offset="[11, 13]"
+            unelevated
+            content-style="border-radius: 0px;"
+            auto-close
+            v-if="$q.screen.width < 675"
+          >
+            <q-list separator>
+              <q-item clickable v-close-popup @click="onItemClick">
+                <q-btn stretch flat label="Download PDF" icon="download" no-caps />
+              </q-item>
+              <q-item clickable v-close-popup @click="onItemClick">
+                <q-btn stretch flat label="Print" icon="print" no-caps />
+              </q-item>
+            </q-list>
+          </q-btn-dropdown>
+        </template>
+
       </q-toolbar>
     </q-header>
 
@@ -163,7 +166,7 @@
           </div>
           <div class="text-weight-bold q-pa-xs">{{ userStore.userDetails.full_name }}</div>
           <div class="text-subtitle2 q-pl-xs">{{ resumeStore.intro.headline}}</div>
-          <q-chip outline square dense color="yellow" icon="star"> {{ rating }} </q-chip>
+          <q-chip outline square dense color="yellow" icon="star"> {{ rating || 0 }} </q-chip>
         </div>
       </q-img>
     </q-drawer>

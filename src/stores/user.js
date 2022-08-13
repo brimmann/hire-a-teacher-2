@@ -136,6 +136,14 @@ export const useUserStore = defineStore('user', {
       };
     },
 
+    async requestResetPassword(payload) {
+      const response = await api.post('/api/v1/password_reset/', payload);
+      return response;
+    },
+    async validateToken(payload) {
+      const response = await api.post('/api/v1/password_reset/validate_token/', payload);
+      return response;
+    },
     persistUser() {
       localStorage.setItem('token', this.token.toString());
       localStorage.setItem('userId', this.userId.toString());

@@ -2,7 +2,7 @@
   <q-layout view="hhh LpR fff">
     <q-header class="bg-transparent q-mt-xl relative-position">
       <q-toolbar class="text-black" style="padding: 8px 100px">
-        <q-img src="../assets/logo-2.png" width="250px" height="30px" position="-50px" />
+        <q-img src="../assets/logo-3.png" width="150px" />
         <q-space />
         <div class="row justify-between q-gutter-lg text-subtitle1">
           <div class="cursor-pointer non-selectable" @click="startFeedback">Rate teacher</div>
