@@ -1,13 +1,13 @@
 <template>
   <q-layout view="hhh LpR fff">
     <q-header class="bg-transparent q-mt-xl relative-position">
-      <q-toolbar class="text-black" style="padding: 8px 100px">
-        <q-img src="../assets/logo-3.png" width="150px" />
+      <q-toolbar class="text-black row items-center" style="padding: 8px 100px">
+        <q-img src="../assets/logo-3.png" width="170px" @click="$router.push('/')" class="cursor-pointer"/>
         <q-space />
-        <div class="row justify-between q-gutter-lg text-subtitle1">
+        <div class="row justify-between q-gutter-lg text-subtitle1 text-orange-10">
           <div class="cursor-pointer non-selectable" @click="startFeedback">Rate teacher</div>
-          <div>About us</div>
-          <div>Help center</div>
+          <div class="cursor-pointer non-selectable" @click="$router.push('/about')">About us</div>
+<!--          <div>Help center</div>-->
         </div>
       </q-toolbar>
     </q-header>
@@ -62,7 +62,7 @@
           Pakistan
         </div>
         <div class="text-body1">
-          contact@hireateacher.pk<br />
+          contact@hireateacher.site<br />
           +92-325-3021332
         </div>
       </div>

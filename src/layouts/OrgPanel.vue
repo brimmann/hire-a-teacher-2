@@ -216,8 +216,8 @@ export default {
       }
     },
     logout() {
-      this.$router.push('/');
       this.userStore.logout();
+      this.$router.push('/');
     }
   },
 };

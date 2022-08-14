@@ -241,12 +241,8 @@ export default {
       }
     },
     logout() {
+      this.userStore.logout();
       this.$router.push('/');
-
-      const timeOut = setTimeout(() => {
-        this.userStore.logout();
-        clearTimeout(timeOut);
-      }, 300)
     }
   },
   mounted() {
