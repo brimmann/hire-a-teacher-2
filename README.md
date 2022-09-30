@@ -1,4 +1,4 @@
-# Hire a Teacher (com.pentecnologies.teachers)
+# Hire a Teacher (www.hireateacher.site)
 
 Final year project of our BS degree program.
 
